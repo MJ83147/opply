@@ -1,0 +1,410 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Free Ops Review | Opply</title>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&family=Fira+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --navy: #14144D;
+    --teal: #32BFB8;
+    --teal-hover: #3ADDDD;
+    --teal-bg: #f0faf9;
+    --teal-subtle: rgba(50,191,184,0.08);
+    --gold: #F4B804;
+    --gold-bg: #fef9e8;
+    --dark: #232A30;
+    --grey: #6B7280;
+    --grey-light: #9CA3AF;
+    --border: #E5E7EB;
+    --off-white: #F9FAFB;
+    --white: #FFFFFF;
+    --radius: 16px;
+    --radius-sm: 12px;
+    --radius-xs: 8px;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: 'Fira Sans', sans-serif;
+    color: var(--dark);
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+    background: var(--white);
+  }
+
+  /* NAV */
+  .nav { background: var(--white); border-bottom: 1px solid var(--border); padding: 14px 0; position: sticky; top: 0; z-index: 100; }
+  .nav-inner { max-width: 1120px; margin: 0 auto; padding: 0 32px; display: flex; align-items: center; justify-content: space-between; }
+  .nav-logo { font-family: 'Poppins', sans-serif; font-weight: 800; font-size: 28px; color: var(--navy); letter-spacing: -0.5px; text-decoration: none; }
+  .nav-right { display: flex; align-items: center; gap: 28px; }
+  .nav-link { font-size: 14px; font-weight: 500; color: var(--grey); text-decoration: none; transition: color 0.2s; }
+  .nav-link:hover { color: var(--navy); }
+
+  /* HERO */
+  .hero { background: var(--navy); padding: 56px 32px 64px; position: relative; overflow: hidden; }
+  .hero::before { content: ''; position: absolute; top: -140px; right: -80px; width: 420px; height: 420px; background: radial-gradient(circle, rgba(50,191,184,0.08) 0%, transparent 70%); border-radius: 50%; pointer-events: none; }
+  .hero::after { content: ''; position: absolute; bottom: -100px; left: -40px; width: 280px; height: 280px; background: radial-gradient(circle, rgba(244,184,4,0.05) 0%, transparent 70%); border-radius: 50%; pointer-events: none; }
+  .hero-inner { max-width: 1120px; margin: 0 auto; display: grid; grid-template-columns: 1fr 400px; gap: 56px; align-items: start; position: relative; }
+  .hero-content { padding-top: 8px; }
+  .hero-badge { display: inline-block; font-size: 11px; font-weight: 600; color: var(--teal); text-transform: uppercase; letter-spacing: 1.5px; margin-bottom: 20px; padding: 6px 14px; border: 1px solid rgba(50,191,184,0.2); border-radius: 100px; }
+  .hero h1 { font-family: 'Poppins', sans-serif; font-weight: 800; font-size: 38px; color: var(--white); line-height: 1.18; margin-bottom: 18px; }
+  .hero h1 .accent { color: var(--teal); }
+  .hero-sub { font-size: 16px; color: rgba(255,255,255,0.6); line-height: 1.7; margin-bottom: 32px; max-width: 460px; }
+  .hero-checks { list-style: none; display: flex; flex-direction: column; gap: 12px; }
+  .hero-checks li { font-size: 14px; color: rgba(255,255,255,0.75); display: flex; align-items: center; gap: 12px; }
+  .check-icon { width: 22px; height: 22px; background: rgba(50,191,184,0.12); border-radius: 50%; flex-shrink: 0; display: flex; align-items: center; justify-content: center; }
+  .check-icon svg { width: 12px; height: 12px; }
+
+  /* FORM CARD */
+  .form-card { background: var(--white); border-radius: var(--radius); padding: 32px 28px; box-shadow: 0 20px 60px rgba(0,0,0,0.18); }
+  .form-card-title { font-family: 'Poppins', sans-serif; font-weight: 700; font-size: 19px; color: var(--navy); margin-bottom: 4px; }
+  .form-card-sub { font-size: 13px; color: var(--grey); margin-bottom: 24px; }
+  .visual-form { display: flex; flex-direction: column; gap: 14px; }
+  .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+  .field { display: flex; flex-direction: column; gap: 5px; }
+  .field label { font-size: 12px; font-weight: 600; color: var(--navy); }
+  .field input, .field select { font-family: 'Fira Sans', sans-serif; font-size: 14px; padding: 11px 14px; border: 1.5px solid var(--border); border-radius: var(--radius-xs); background: var(--white); color: var(--dark); transition: border-color 0.2s; width: 100%; }
+  .field select { appearance: none; -webkit-appearance: none; background-image: url("data:image/svg+xml,%3Csvg width='12' height='8' viewBox='0 0 12 8' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M1 1.5L6 6.5L11 1.5' stroke='%236B7280' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 14px center; padding-right: 36px; cursor: pointer; }
+  .field input:focus, .field select:focus { outline: none; border-color: var(--teal); box-shadow: 0 0 0 3px rgba(50,191,184,0.10); }
+  .btn-submit { font-family: 'Fira Sans', sans-serif; font-weight: 600; font-size: 15px; background: var(--navy); color: var(--white); border: none; padding: 14px 24px; border-radius: 100px; cursor: pointer; transition: opacity 0.2s; width: 100%; margin-top: 4px; }
+  .btn-submit:hover { opacity: 0.9; }
+  .form-fine { font-size: 11px; color: var(--grey-light); text-align: center; margin-top: 2px; }
+
+  /* LOGOS */
+  .logos { padding: 36px 32px; border-bottom: 1px solid var(--border); }
+  .logos-inner { max-width: 1120px; margin: 0 auto; text-align: center; }
+  .logos-label { font-size: 11px; font-weight: 600; color: var(--grey-light); text-transform: uppercase; letter-spacing: 1.2px; margin-bottom: 20px; }
+  .logos-row { display: flex; align-items: center; justify-content: center; gap: 36px; flex-wrap: wrap; }
+  .logo-item { font-family: 'Poppins', sans-serif; font-weight: 700; font-size: 15px; color: var(--navy); opacity: 0.25; white-space: nowrap; }
+
+  /* SECTION SHARED */
+  .section-tag { font-size: 11px; font-weight: 600; color: var(--teal); text-transform: uppercase; letter-spacing: 1.5px; margin-bottom: 12px; }
+
+  /* PROBLEM */
+  .problem { padding: 80px 32px; }
+  .problem-inner { max-width: 960px; margin: 0 auto; }
+  .problem h2 { font-family: 'Poppins', sans-serif; font-weight: 700; font-size: 30px; color: var(--navy); line-height: 1.25; margin-bottom: 16px; max-width: 580px; }
+  .problem-lead { font-size: 16px; color: var(--grey); line-height: 1.7; max-width: 560px; margin-bottom: 40px; }
+  .pain-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+  .pain-card { background: var(--off-white); border-radius: var(--radius-sm); padding: 24px; border: 1px solid var(--border); }
+  .pain-card h3 { font-family: 'Poppins', sans-serif; font-weight: 600; font-size: 15px; color: var(--navy); margin-bottom: 6px; }
+  .pain-card p { font-size: 13px; color: var(--grey); line-height: 1.6; }
+
+  /* SOLUTION */
+  .solution { padding: 80px 32px; background: var(--off-white); }
+  .solution-inner { max-width: 1120px; margin: 0 auto; }
+  .solution h2 { font-family: 'Poppins', sans-serif; font-weight: 700; font-size: 30px; color: var(--navy); line-height: 1.25; margin-bottom: 10px; }
+  .solution-sub { font-size: 16px; color: var(--grey); margin-bottom: 44px; max-width: 540px; }
+  .sol-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 20px; }
+  .sol-card { background: var(--white); border-radius: var(--radius-sm); padding: 28px 24px; border: 1px solid var(--border); }
+  .sol-icon { width: 42px; height: 42px; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 19px; margin-bottom: 16px; }
+  .sol-icon.ic-teal { background: var(--teal-bg); }
+  .sol-icon.ic-gold { background: var(--gold-bg); }
+  .sol-icon.ic-navy { background: rgba(20,20,77,0.05); }
+  .sol-card h3 { font-family: 'Poppins', sans-serif; font-weight: 600; font-size: 16px; color: var(--navy); margin-bottom: 6px; }
+  .sol-card p { font-size: 13px; color: var(--grey); line-height: 1.6; }
+
+  /* PROOF */
+  .proof { padding: 68px 32px; background: var(--navy); }
+  .proof-inner { max-width: 1000px; margin: 0 auto; text-align: center; }
+  .proof-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 28px; margin-bottom: 44px; }
+  .proof-num { font-family: 'Poppins', sans-serif; font-weight: 800; font-size: 40px; line-height: 1; margin-bottom: 8px; }
+  .proof-num.c-teal { color: var(--teal); }
+  .proof-num.c-gold { color: var(--gold); }
+  .proof-num.c-white { color: var(--white); }
+  .proof-desc { font-size: 13px; color: rgba(255,255,255,0.5); line-height: 1.5; }
+  .proof-backed { border-top: 1px solid rgba(255,255,255,0.07); padding-top: 28px; }
+  .proof-backed-label { font-size: 10px; font-weight: 600; color: rgba(255,255,255,0.3); text-transform: uppercase; letter-spacing: 1.2px; margin-bottom: 16px; }
+  .investor-row { display: flex; align-items: center; justify-content: center; gap: 36px; flex-wrap: wrap; }
+  .investor-name { font-family: 'Poppins', sans-serif; font-weight: 600; font-size: 13px; color: rgba(255,255,255,0.25); white-space: nowrap; }
+
+  /* EXPECT */
+  .expect { padding: 80px 32px; }
+  .expect-inner { max-width: 960px; margin: 0 auto; }
+  .expect h2 { font-family: 'Poppins', sans-serif; font-weight: 700; font-size: 30px; color: var(--navy); margin-bottom: 10px; }
+  .expect-sub { font-size: 16px; color: var(--grey); margin-bottom: 44px; max-width: 500px; }
+  .steps-row { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 28px; margin-bottom: 44px; }
+  .step-num { font-family: 'Poppins', sans-serif; font-weight: 800; font-size: 44px; color: var(--border); line-height: 1; margin-bottom: 14px; }
+  .step-card h3 { font-family: 'Poppins', sans-serif; font-weight: 600; font-size: 16px; color: var(--navy); margin-bottom: 6px; }
+  .step-card p { font-size: 14px; color: var(--grey); line-height: 1.6; }
+  .expect-reassurance { background: var(--teal-bg); border: 1px solid rgba(50,191,184,0.12); border-radius: var(--radius-sm); padding: 22px 24px; display: flex; align-items: flex-start; gap: 14px; }
+  .reassure-icon { width: 32px; height: 32px; background: var(--teal); border-radius: 50%; flex-shrink: 0; display: flex; align-items: center; justify-content: center; }
+  .reassure-icon svg { width: 16px; height: 16px; }
+  .reassure-text { font-size: 14px; color: var(--navy); line-height: 1.6; }
+  .reassure-text strong { display: block; font-family: 'Poppins', sans-serif; font-weight: 600; font-size: 14px; margin-bottom: 2px; }
+
+  /* TESTIMONIAL */
+  .testimonial { padding: 64px 32px; background: var(--off-white); }
+  .testimonial-inner { max-width: 680px; margin: 0 auto; text-align: center; }
+  .testimonial-quote { font-family: 'Poppins', sans-serif; font-weight: 500; font-size: 20px; color: var(--navy); line-height: 1.6; font-style: italic; margin-bottom: 20px; }
+  .testimonial-attr { font-size: 14px; font-weight: 600; color: var(--navy); }
+  .testimonial-role { font-size: 13px; color: var(--grey); }
+  .placeholder-tag { font-size: 10px; color: var(--grey-light); background: var(--white); border: 1px solid var(--border); display: inline-block; padding: 3px 10px; border-radius: 100px; margin-top: 14px; }
+
+  /* BOTTOM CTA */
+  .bottom-cta { padding: 80px 32px; text-align: center; }
+  .bottom-cta-inner { max-width: 520px; margin: 0 auto; }
+  .bottom-cta h2 { font-family: 'Poppins', sans-serif; font-weight: 700; font-size: 28px; color: var(--navy); line-height: 1.25; margin-bottom: 12px; }
+  .bottom-cta p { font-size: 15px; color: var(--grey); margin-bottom: 28px; line-height: 1.6; }
+  .btn-cta { display: inline-block; font-family: 'Fira Sans', sans-serif; font-weight: 600; font-size: 16px; background: var(--navy); color: var(--white); padding: 16px 40px; border-radius: 100px; text-decoration: none; cursor: pointer; transition: opacity 0.2s; border: none; }
+  .btn-cta:hover { opacity: 0.9; }
+
+  /* FOOTER */
+  .footer { padding: 28px 32px; border-top: 1px solid var(--border); }
+  .footer-inner { max-width: 1120px; margin: 0 auto; display: flex; align-items: center; justify-content: space-between; }
+  .footer-brand { font-family: 'Poppins', sans-serif; font-weight: 800; font-size: 20px; color: var(--navy); text-decoration: none; }
+  .footer-links { display: flex; gap: 20px; }
+  .footer-links a { font-size: 13px; color: var(--grey); text-decoration: none; }
+  .footer-links a:hover { color: var(--navy); }
+  .footer-copy { font-size: 11px; color: var(--grey-light); }
+
+  /* DEV NOTE */
+  .dev-note { position: fixed; top: 12px; right: 12px; background: var(--navy); color: var(--teal); font-size: 10px; font-weight: 600; letter-spacing: 1.2px; text-transform: uppercase; padding: 5px 12px; border-radius: var(--radius-xs); z-index: 200; box-shadow: 0 4px 12px rgba(0,0,0,0.15); }
+
+  /* RESPONSIVE */
+  @media (max-width: 900px) {
+    .hero-inner { grid-template-columns: 1fr; gap: 36px; }
+    .hero h1 { font-size: 30px; }
+    .pain-grid, .sol-grid, .steps-row { grid-template-columns: 1fr; }
+    .proof-grid { grid-template-columns: 1fr 1fr; }
+    .footer-inner { flex-direction: column; gap: 12px; text-align: center; }
+    .nav-link { display: none; }
+    .form-row { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<div class="dev-note">Draft wireframe</div>
+
+<!-- NAV -->
+<nav class="nav">
+  <div class="nav-inner">
+    <a class="nav-logo" href="https://opply.com">Opply</a>
+    <div class="nav-right">
+      <a class="nav-link" href="https://opply.com/case-studies/">Case Studies</a>
+      <a class="nav-link" href="https://opply.com/about/">About</a>
+    </div>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero" id="top">
+  <div class="hero-inner">
+    <div class="hero-content">
+      <div class="hero-badge">Free for F&B brands</div>
+      <h1>Get a free ops review from <span class="accent">F&B supply chain specialists</span></h1>
+      <p class="hero-sub">In 15 minutes, our team will assess your current sourcing, fulfilment, and financing setup and show you exactly where you're losing time and margin.</p>
+      <ul class="hero-checks">
+        <li><span class="check-icon"><svg viewBox="0 0 12 10" fill="none"><path d="M1 5L4.5 8.5L11 1.5" stroke="#32BFB8" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></span>Meet an F&B ops specialist who knows your world</li>
+        <li><span class="check-icon"><svg viewBox="0 0 12 10" fill="none"><path d="M1 5L4.5 8.5L11 1.5" stroke="#32BFB8" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></span>Get a clear view of where your supply chain can improve</li>
+        <li><span class="check-icon"><svg viewBox="0 0 12 10" fill="none"><path d="M1 5L4.5 8.5L11 1.5" stroke="#32BFB8" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></span>Walk away with actionable next steps for your ops</li>
+      </ul>
+    </div>
+
+    <!-- FORM -->
+    <div class="form-card">
+      <div class="form-card-title">Book your free ops review</div>
+      <div class="form-card-sub">Takes 30 seconds. We'll be in touch within one working day.</div>
+
+      <!-- PRODUCTION NOTE: Replace this form with your HubSpot embed -->
+      <form class="visual-form" onsubmit="return false;">
+        <div class="form-row">
+          <div class="field"><label>First name</label><input type="text" placeholder="Jane"></div>
+          <div class="field"><label>Last name</label><input type="text" placeholder="Smith"></div>
+        </div>
+        <div class="field"><label>Work email</label><input type="email" placeholder="jane@yourbrand.com"></div>
+        <div class="field"><label>Company name</label><input type="text" placeholder="Your F&B brand"></div>
+        <div class="field">
+          <label>Annual revenue</label>
+          <select>
+            <option value="" disabled selected>Select range</option>
+            <option>Under $500k</option>
+            <option>$500k - $1M</option>
+            <option>$1M - $2M</option>
+            <option>$2M - $5M</option>
+            <option>$5M - $10M</option>
+            <option>$10M+</option>
+          </select>
+        </div>
+        <button type="submit" class="btn-submit">Book my free ops review</button>
+        <div class="form-fine">No spam. Your data stays private.</div>
+      </form>
+    </div>
+  </div>
+</section>
+
+<!-- LOGOS -->
+<section class="logos">
+  <div class="logos-inner">
+    <div class="logos-label">Trusted by growing F&B brands</div>
+    <div class="logos-row">
+      <span class="logo-item">Dirtea</span>
+      <span class="logo-item">Batch</span>
+      <span class="logo-item">Punchy</span>
+      <span class="logo-item">Borough Broth</span>
+      <span class="logo-item">Hip Pop</span>
+      <span class="logo-item">Bonraw</span>
+      <span class="logo-item">Jukes</span>
+      <span class="logo-item">Unrooted</span>
+      <span class="logo-item">Biomel</span>
+      <span class="logo-item">Momo</span>
+    </div>
+  </div>
+</section>
+
+<!-- PROBLEM -->
+<section class="problem">
+  <div class="problem-inner">
+    <div class="section-tag">The reality</div>
+    <h2>Ops shouldn't be the thing that slows you down</h2>
+    <p class="problem-lead">You know the drill. The supply chain stuff that was manageable at launch gets heavier as you grow. Here's where we see brands losing the most time and money.</p>
+    <div class="pain-grid">
+      <div class="pain-card">
+        <h3>Everything lives in spreadsheets</h3>
+        <p>Ingredients, suppliers, POs, delivery dates. It works until it doesn't, and by then you've already missed a restock window.</p>
+      </div>
+      <div class="pain-card">
+        <h3>Deliveries you can't rely on</h3>
+        <p>When your on-time rate hovers around 60%, every week is a gamble. Late ingredients mean late production, and retailers don't wait around.</p>
+      </div>
+      <div class="pain-card">
+        <h3>Cash tied up in ingredients</h3>
+        <p>You're paying suppliers before your customers have paid you. That gap gets wider as you scale, and it limits what you can say yes to.</p>
+      </div>
+      <div class="pain-card">
+        <h3>Your week disappears into admin</h3>
+        <p>Chasing supplier confirmations, reconciling invoices, placing reorders. The work that keeps the lights on is the same work keeping you from growing.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SOLUTION -->
+<section class="solution">
+  <div class="solution-inner">
+    <div class="section-tag">How Opply works</div>
+    <h2>We run your ops so you can run your brand</h2>
+    <p class="solution-sub">Opply's AI agents and F&B operations team take over your entire back-end supply chain. Sourcing, ordering, delivery, financing. All handled.</p>
+    <div class="sol-grid">
+      <div class="sol-card">
+        <div class="sol-icon ic-teal">&#9878;</div>
+        <h3>Sourcing and procurement</h3>
+        <p>Access top-tier suppliers like Barry Callebaut that small brands can't normally reach. Opply aggregates demand across brands to unlock bulk pricing without bulk orders.</p>
+      </div>
+      <div class="sol-card">
+        <div class="sol-icon ic-gold">&#9201;</div>
+        <h3>Order management and delivery</h3>
+        <p>Opply places orders, tracks deliveries, and coordinates logistics. 99% on-time-in-full delivery versus the 60% industry average.</p>
+      </div>
+      <div class="sol-card">
+        <div class="sol-icon ic-navy">&#9733;</div>
+        <h3>Financing and payments</h3>
+        <p>Get 60-90 day payment terms and one consolidated monthly invoice. Pay for ingredients after you've sold the product, not before.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PROOF -->
+<section class="proof">
+  <div class="proof-inner">
+    <div class="proof-grid">
+      <div class="proof-stat">
+        <div class="proof-num c-teal">99%</div>
+        <div class="proof-desc">On-time-in-full<br>delivery rate</div>
+      </div>
+      <div class="proof-stat">
+        <div class="proof-num c-gold">90 days</div>
+        <div class="proof-desc">Payment terms<br>to free up cash flow</div>
+      </div>
+      <div class="proof-stat">
+        <div class="proof-num c-white">50%</div>
+        <div class="proof-desc">Of new clients come<br>from referrals</div>
+      </div>
+      <div class="proof-stat">
+        <div class="proof-num c-teal">300%</div>
+        <div class="proof-desc">Improvement in<br>demand forecasting</div>
+      </div>
+    </div>
+    <div class="proof-backed">
+      <div class="proof-backed-label">Backed by leading investors</div>
+      <div class="investor-row">
+        <span class="investor-name">Index Ventures</span>
+        <span class="investor-name">Entrepreneur First</span>
+        <span class="investor-name">Chalfen Ventures</span>
+        <span class="investor-name">JamJar Investments</span>
+        <span class="investor-name">Foxe Capital</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- WHAT TO EXPECT -->
+<section class="expect">
+  <div class="expect-inner">
+    <div class="section-tag">What to expect</div>
+    <h2>Your ops review in 15 minutes</h2>
+    <p class="expect-sub">You'll speak with someone who's actually run F&B supply chains, not a salesperson reading a script.</p>
+    <div class="steps-row">
+      <div class="step-card">
+        <div class="step-num">01</div>
+        <h3>We learn your setup</h3>
+        <p>How you're currently managing sourcing, suppliers, orders, and payments. No judgement, just context.</p>
+      </div>
+      <div class="step-card">
+        <div class="step-num">02</div>
+        <h3>We spot the gaps</h3>
+        <p>Our team identifies where you're losing time and money based on patterns we've seen across hundreds of F&B brands.</p>
+      </div>
+      <div class="step-card">
+        <div class="step-num">03</div>
+        <h3>You get a clear picture</h3>
+        <p>Walk away knowing exactly what's costing you, what's fixable, and whether Opply is the right fit. No obligations either way.</p>
+      </div>
+    </div>
+    <div class="expect-reassurance">
+      <div class="reassure-icon"><svg viewBox="0 0 16 16" fill="none"><path d="M8 1L10.1 5.3L15 6L11.5 9.4L12.2 14.3L8 12.1L3.8 14.3L4.5 9.4L1 6L5.9 5.3L8 1Z" fill="#14144D"/></svg></div>
+      <div class="reassure-text">
+        <strong>Our team are F&B operations specialists, not salespeople.</strong>
+        Every member of Opply's client team has real experience running food and beverage supply chains. They speak your language because they've done your job.
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- TESTIMONIAL -->
+<section class="testimonial">
+  <div class="testimonial-inner">
+    <p class="testimonial-quote">"[Placeholder: a real client testimonial goes here. Ideally from a founder at a similar-stage brand who can speak to the operational relief and time savings Opply delivered.]"</p>
+    <div class="testimonial-attr">[Client Name]</div>
+    <div class="testimonial-role">Founder, [Brand Name]</div>
+    <div class="placeholder-tag">Opply to provide client quote</div>
+  </div>
+</section>
+
+<!-- BOTTOM CTA -->
+<section class="bottom-cta">
+  <div class="bottom-cta-inner">
+    <h2>15 minutes could change how you run your supply chain</h2>
+    <p>Book a free ops review with our F&B specialists. No commitment, no pitch. Just an honest look at your operations.</p>
+    <button class="btn-cta" onclick="document.getElementById('top').scrollIntoView({behavior:'smooth'})">Book my free ops review</button>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer class="footer">
+  <div class="footer-inner">
+    <a class="footer-brand" href="https://opply.com">Opply</a>
+    <div class="footer-links">
+      <a href="https://opply.com/case-studies/">Case Studies</a>
+      <a href="https://opply.com/sourcing/">Sourcing</a>
+      <a href="https://opply.com/about/">About</a>
+    </div>
+    <div class="footer-copy">Opply Ltd &middot; London &middot; Chicago</div>
+  </div>
+</footer>
+
+</body>
+</html>
