@@ -1,0 +1,534 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Content Engine – Opply</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --navy: #1E0E5C;
+    --navy-hover: #2d1a7a;
+    --pink: #E8195A;
+    --white: #ffffff;
+    --off-white: #f4f4f8;
+    --border: #e0e0ec;
+    --text: #1a1a2e;
+    --muted: #888899;
+    --posted-bg: #efeff5;
+    --posted-text: #b8b8cc;
+  }
+
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    background: var(--off-white);
+    color: var(--text);
+    min-height: 100vh;
+  }
+
+  header {
+    background: var(--navy);
+    padding: 0 56px;
+    height: 62px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+  }
+
+  .logo {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    color: var(--white);
+    font-size: 15px;
+    font-weight: 700;
+    letter-spacing: -0.2px;
+  }
+
+  .logo-pip {
+    width: 8px;
+    height: 8px;
+    background: var(--pink);
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+
+  .header-right {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .header-right label {
+    color: rgba(255,255,255,0.45);
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.6px;
+  }
+
+  select#team-member {
+    background: rgba(255,255,255,0.08);
+    border: 1px solid rgba(255,255,255,0.18);
+    color: var(--white);
+    padding: 7px 30px 7px 11px;
+    border-radius: 7px;
+    font-size: 13px;
+    font-weight: 500;
+    cursor: pointer;
+    appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'%3E%3Cpath d='M1 1l4 4 4-4' stroke='rgba(255,255,255,0.4)' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 10px center;
+  }
+  select#team-member option { background: #1E0E5C; }
+  select#team-member:focus { outline: none; border-color: rgba(255,255,255,0.4); }
+
+  main {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 40px 56px;
+  }
+
+  .page-header { margin-bottom: 28px; }
+  .page-title { font-size: 20px; font-weight: 700; color: var(--navy); letter-spacing: -0.3px; margin-bottom: 4px; }
+  .page-subtitle { font-size: 13px; color: var(--muted); }
+
+  .stats-bar { display: flex; gap: 14px; margin-bottom: 28px; }
+
+  .stat {
+    background: var(--white);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 14px 20px;
+  }
+
+  .stat-number { font-size: 22px; font-weight: 700; color: var(--navy); line-height: 1; margin-bottom: 3px; }
+  .stat-number.accent { color: var(--pink); }
+  .stat-label { font-size: 11px; color: var(--muted); font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; }
+
+  .filter-row { display: flex; gap: 28px; align-items: flex-start; margin-bottom: 24px; flex-wrap: wrap; }
+  .filter-group { display: flex; flex-direction: column; gap: 6px; }
+  .filter-group-label { font-size: 10px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.6px; color: var(--muted); padding-left: 2px; }
+  .filter-pills { display: flex; gap: 6px; flex-wrap: wrap; }
+
+  .filter-btn {
+    padding: 6px 13px;
+    border-radius: 20px;
+    border: 1px solid var(--border);
+    background: var(--white);
+    color: var(--muted);
+    font-size: 12px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.15s;
+    white-space: nowrap;
+  }
+  .filter-btn:hover { border-color: var(--navy); color: var(--navy); }
+  .filter-btn.active { background: var(--navy); color: var(--white); border-color: var(--navy); }
+
+  .warning-bar {
+    display: none;
+    background: rgba(232,25,90,0.05);
+    border: 1px solid rgba(232,25,90,0.18);
+    color: var(--pink);
+    font-size: 13px;
+    font-weight: 500;
+    padding: 10px 16px;
+    border-radius: 8px;
+    margin-bottom: 20px;
+  }
+  .warning-bar.visible { display: block; }
+
+  .posts-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 16px;
+  }
+
+  @media (max-width: 860px) {
+    .posts-grid { grid-template-columns: 1fr; }
+    main { padding: 28px 20px; }
+    header { padding: 0 20px; }
+  }
+
+  .post-card {
+    background: var(--white);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 22px 24px;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    transition: box-shadow 0.2s, transform 0.15s;
+  }
+  .post-card:hover { box-shadow: 0 4px 20px rgba(30,14,92,0.07); transform: translateY(-1px); }
+  .post-card.posted { background: var(--posted-bg); border-color: transparent; }
+  .post-card.posted:hover { transform: none; box-shadow: none; }
+
+  .card-meta { display: flex; align-items: center; gap: 7px; flex-wrap: wrap; }
+
+  .tag {
+    font-size: 10px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    padding: 3px 9px;
+    border-radius: 20px;
+  }
+  .tag-format { color: var(--pink); background: rgba(232,25,90,0.07); }
+  .tag-theme { color: var(--navy); background: rgba(30,14,92,0.07); }
+  .tag-posted { color: var(--posted-text); background: rgba(0,0,0,0.04); }
+
+  .post-copy { font-size: 13.5px; line-height: 1.7; color: var(--text); white-space: pre-line; flex: 1; }
+  .post-card.posted .post-copy { color: var(--posted-text); }
+
+  .posted-by { font-size: 12px; color: var(--posted-text); }
+
+  .card-actions { display: flex; align-items: center; gap: 8px; }
+
+  .btn-post {
+    background: var(--navy);
+    color: var(--white);
+    border: none;
+    border-radius: 7px;
+    padding: 7px 14px;
+    font-size: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.15s;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    white-space: nowrap;
+  }
+  .btn-post:hover { background: var(--navy-hover); }
+
+  .btn-posted {
+    background: transparent;
+    color: var(--posted-text);
+    border: 1px solid var(--border);
+    border-radius: 7px;
+    padding: 7px 14px;
+    font-size: 12px;
+    font-weight: 600;
+    cursor: default;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+  }
+
+  .loading-state { grid-column: 1/-1; text-align: center; padding: 80px 20px; color: var(--muted); font-size: 14px; }
+  .spinner { width: 28px; height: 28px; border: 2px solid var(--border); border-top-color: var(--navy); border-radius: 50%; animation: spin 0.7s linear infinite; margin: 0 auto 14px; }
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  .empty-state { grid-column: 1/-1; text-align: center; padding: 60px 20px; color: var(--muted); }
+  .empty-state h3 { font-size: 16px; color: var(--navy); margin-bottom: 6px; }
+  .empty-state p { font-size: 13px; }
+
+  .modal-overlay { position: fixed; inset: 0; background: rgba(10,5,40,0.5); z-index: 200; display: none; align-items: center; justify-content: center; padding: 24px; }
+  .modal-overlay.open { display: flex; }
+
+  .modal { background: var(--white); border-radius: 16px; padding: 32px; max-width: 540px; width: 100%; box-shadow: 0 24px 60px rgba(10,5,40,0.18); animation: modal-in 0.18s ease; }
+  @keyframes modal-in { from { opacity: 0; transform: scale(0.97) translateY(6px); } to { opacity: 1; transform: scale(1) translateY(0); } }
+
+  .modal-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 18px; }
+  .modal-title { font-size: 17px; font-weight: 700; color: var(--navy); }
+  .modal-close { background: none; border: none; color: var(--muted); font-size: 18px; cursor: pointer; line-height: 1; }
+  .modal-close:hover { color: var(--text); }
+
+  .modal-preview { background: var(--off-white); border: 1px solid var(--border); border-radius: 9px; padding: 14px 16px; font-size: 13px; line-height: 1.65; color: var(--text); margin-bottom: 16px; max-height: 200px; overflow-y: auto; white-space: pre-line; }
+  .modal-note { font-size: 13px; color: var(--muted); margin-bottom: 22px; line-height: 1.5; }
+  .modal-note strong { color: var(--navy); }
+
+  .modal-actions { display: flex; gap: 10px; }
+
+  .btn-cancel { flex: 1; background: var(--white); color: var(--text); border: 1px solid var(--border); border-radius: 8px; padding: 11px; font-size: 13px; font-weight: 600; cursor: pointer; transition: border-color 0.15s; }
+  .btn-cancel:hover { border-color: var(--navy); }
+
+  .btn-confirm { flex: 2; background: var(--navy); color: var(--white); border: none; border-radius: 8px; padding: 11px; font-size: 13px; font-weight: 600; cursor: pointer; transition: background 0.15s; display: flex; align-items: center; justify-content: center; gap: 7px; }
+  .btn-confirm:hover { background: var(--navy-hover); }
+
+  .toast { position: fixed; bottom: 28px; right: 28px; background: var(--navy); color: var(--white); padding: 13px 18px; border-radius: 9px; font-size: 13px; font-weight: 500; box-shadow: 0 8px 24px rgba(10,5,40,0.2); z-index: 300; display: none; align-items: center; gap: 9px; }
+  .toast.show { display: flex; }
+  .toast-icon { color: #4ade80; }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="logo">
+    <div class="logo-pip"></div>
+    Content Engine
+  </div>
+  <div class="header-right">
+    <label for="team-member">Posting as</label>
+    <select id="team-member">
+      <option value="">Select your name</option>
+    </select>
+  </div>
+</header>
+
+<main>
+  <div class="page-header">
+    <div class="page-title">LinkedIn Post Pool</div>
+    <div class="page-subtitle">Select a post, copy it to your clipboard, and open LinkedIn ready to paste.</div>
+  </div>
+
+  <div class="stats-bar">
+    <div class="stat"><div class="stat-number" id="stat-available">—</div><div class="stat-label">Available</div></div>
+    <div class="stat"><div class="stat-number accent" id="stat-posted">—</div><div class="stat-label">Posted</div></div>
+    <div class="stat"><div class="stat-number" id="stat-total">—</div><div class="stat-label">Total</div></div>
+  </div>
+
+  <div class="warning-bar" id="member-warning">Please select your name at the top before posting.</div>
+
+  <div class="filter-row">
+    <div class="filter-group">
+      <div class="filter-group-label">Status</div>
+      <div class="filter-pills" id="status-filters">
+        <button class="filter-btn active" data-status="all">All</button>
+        <button class="filter-btn" data-status="available">Available</button>
+        <button class="filter-btn" data-status="posted">Posted</button>
+      </div>
+    </div>
+    <div class="filter-group">
+      <div class="filter-group-label">Format</div>
+      <div class="filter-pills" id="format-filters"></div>
+    </div>
+    <div class="filter-group">
+      <div class="filter-group-label">Theme</div>
+      <div class="filter-pills" id="theme-filters"></div>
+    </div>
+  </div>
+
+  <div class="posts-grid" id="posts-grid">
+    <div class="loading-state"><div class="spinner"></div>Loading posts...</div>
+  </div>
+</main>
+
+<div class="modal-overlay" id="modal-overlay">
+  <div class="modal">
+    <div class="modal-header">
+      <div class="modal-title">Post to LinkedIn</div>
+      <button class="modal-close" id="modal-close-btn">&#10005;</button>
+    </div>
+    <div class="modal-preview" id="modal-preview-text"></div>
+    <div class="modal-note" id="modal-note"></div>
+    <div class="modal-actions">
+      <button class="btn-cancel" id="modal-cancel-btn">Cancel</button>
+      <button class="btn-confirm" id="modal-confirm-btn">
+        <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M2 7.5L5.5 11L12 3.5" stroke="white" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        Confirm and open LinkedIn
+      </button>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast">
+  <span class="toast-icon">&#10003;</span>
+  <span id="toast-msg"></span>
+</div>
+
+<script>
+const SHEET_CSV = "https://docs.google.com/spreadsheets/d/e/2PACX-1vSrEo6UtDrv1Exz4Km7JX76sy9EDHmSgvHZ2Cdbsc9A8va_IqEC6ySIN1f0ArQmNJKcgdy8meEFlOyY/pub?output=csv";
+
+const TEAM = ["Alex Turner","Beth Clarke","Chris Hall","Dana Kim","Elliot James","Fiona Wright","George Patel","Hannah Scott","Isla Morgan","Jake Ellis"];
+
+let POSTS = [];
+let postedState = {};
+let currentStatus = "all";
+let currentFormat = "all";
+let currentTheme = "all";
+let pendingPostId = null;
+
+// Team dropdown
+const sel = document.getElementById("team-member");
+TEAM.forEach(name => { const o = document.createElement("option"); o.value = name; o.textContent = name; sel.appendChild(o); });
+
+// CSV parser that handles quoted multiline fields
+function parseCSV(text) {
+  const rows = [];
+  let row = [], field = "", inQuote = false;
+  for (let i = 0; i < text.length; i++) {
+    const ch = text[i], next = text[i+1];
+    if (inQuote) {
+      if (ch === '"' && next === '"') { field += '"'; i++; }
+      else if (ch === '"') { inQuote = false; }
+      else { field += ch; }
+    } else {
+      if (ch === '"') { inQuote = true; }
+      else if (ch === ',') { row.push(field); field = ""; }
+      else if (ch === '\n') { row.push(field); rows.push(row); row = []; field = ""; }
+      else if (ch === '\r') {}
+      else { field += ch; }
+    }
+  }
+  if (field || row.length) { row.push(field); rows.push(row); }
+  return rows;
+}
+
+async function loadPosts() {
+  try {
+    const resp = await fetch(SHEET_CSV);
+    if (!resp.ok) throw new Error();
+    const text = await resp.text();
+    const rows = parseCSV(text);
+    const headers = rows[0].map(h => h.trim().toLowerCase());
+    const iId = headers.indexOf("#");
+    const iPost = headers.indexOf("post");
+    const iTheme = headers.indexOf("theme");
+    const iFormat = headers.indexOf("format");
+
+    POSTS = rows.slice(1).filter(r => r[iId] && r[iId].trim()).map(r => ({
+      id: r[iId].trim(),
+      copy: (r[iPost] || "").trim(),
+      theme: (r[iTheme] || "").trim(),
+      format: (r[iFormat] || "").trim()
+    }));
+
+    buildFormatFilters();
+    buildThemeFilters();
+    updateStats();
+    renderPosts();
+  } catch(e) {
+    document.getElementById("posts-grid").innerHTML = `<div class="empty-state"><h3>Could not load posts</h3><p>Check the Google Sheet is published to the web and try refreshing.</p></div>`;
+  }
+}
+
+function buildThemeFilters() {
+  const themes = [...new Set(POSTS.map(p => p.theme).filter(Boolean))].sort();
+  const container = document.getElementById("theme-filters");
+  container.innerHTML = `<button class="filter-btn active" data-theme="all">All</button>` +
+    themes.map(t => `<button class="filter-btn" data-theme="${t}">${t}</button>`).join("");
+  container.querySelectorAll(".filter-btn").forEach(btn => {
+    btn.addEventListener("click", () => {
+      container.querySelectorAll(".filter-btn").forEach(b => b.classList.remove("active"));
+      btn.classList.add("active");
+      currentTheme = btn.dataset.theme;
+      renderPosts();
+    });
+  });
+}
+
+function buildFormatFilters() {
+  const formats = [...new Set(POSTS.map(p => p.format).filter(Boolean))].sort();
+  const container = document.getElementById("format-filters");
+  container.innerHTML = `<button class="filter-btn active" data-format="all">All</button>` +
+    formats.map(f => `<button class="filter-btn" data-format="${f}">${f}</button>`).join("");
+  container.querySelectorAll(".filter-btn").forEach(btn => {
+    btn.addEventListener("click", () => {
+      container.querySelectorAll(".filter-btn").forEach(b => b.classList.remove("active"));
+      btn.classList.add("active");
+      currentFormat = btn.dataset.format;
+      renderPosts();
+    });
+  });
+}
+
+function getFiltered() {
+  return POSTS.filter(p => {
+    const isPosted = !!postedState[p.id];
+    if (currentStatus === "available" && isPosted) return false;
+    if (currentStatus === "posted" && !isPosted) return false;
+    if (currentFormat !== "all" && p.format !== currentFormat) return false;
+    if (currentTheme !== "all" && p.theme !== currentTheme) return false;
+    return true;
+  });
+}
+
+function updateStats() {
+  const posted = Object.keys(postedState).length;
+  document.getElementById("stat-available").textContent = POSTS.length - posted;
+  document.getElementById("stat-posted").textContent = posted;
+  document.getElementById("stat-total").textContent = POSTS.length;
+}
+
+function renderPosts() {
+  const grid = document.getElementById("posts-grid");
+  const filtered = getFiltered();
+  if (!filtered.length) {
+    grid.innerHTML = `<div class="empty-state"><h3>No posts match</h3><p>Try adjusting the filters above.</p></div>`;
+    return;
+  }
+  grid.innerHTML = filtered.map(post => {
+    const isPosted = !!postedState[post.id];
+    const ps = postedState[post.id];
+    return `<div class="post-card ${isPosted ? "posted" : ""}">
+      <div class="card-meta">
+        ${isPosted
+          ? `<span class="tag tag-posted">Posted</span>`
+          : `<span class="tag tag-format">${esc(post.format)}</span><span class="tag tag-theme">${esc(post.theme)}</span>`}
+      </div>
+      <div class="post-copy">${esc(post.copy)}</div>
+      ${isPosted ? `<div class="posted-by">Posted by ${esc(ps.postedBy)} &middot; ${ps.postedAt}</div>` : ""}
+      <div class="card-actions">
+        ${isPosted
+          ? `<button class="btn-posted">&#10003; Posted</button>`
+          : `<button class="btn-post" onclick="openConfirm('${post.id}')">
+              <svg width="13" height="13" viewBox="0 0 15 15" fill="none"><path d="M12 7.5H3M8.5 4L12 7.5 8.5 11" stroke="white" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              Post to LinkedIn
+            </button>`}
+      </div>
+    </div>`;
+  }).join("");
+}
+
+function esc(s) { return (s||"").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;"); }
+
+function openConfirm(postId) {
+  const member = document.getElementById("team-member").value;
+  if (!member) { document.getElementById("member-warning").classList.add("visible"); return; }
+  document.getElementById("member-warning").classList.remove("visible");
+  const post = POSTS.find(p => p.id === postId);
+  pendingPostId = postId;
+  document.getElementById("modal-preview-text").textContent = post.copy;
+  document.getElementById("modal-note").innerHTML = `This will be marked as posted by <strong>${esc(member)}</strong>. The text will be copied to your clipboard and LinkedIn will open ready to paste.`;
+  document.getElementById("modal-overlay").classList.add("open");
+}
+
+function closeModal() { document.getElementById("modal-overlay").classList.remove("open"); pendingPostId = null; }
+
+function confirmPost() {
+  const member = document.getElementById("team-member").value;
+  if (!member || !pendingPostId) return;
+  const post = POSTS.find(p => p.id === pendingPostId);
+  navigator.clipboard.writeText(post.copy).catch(() => {});
+  const now = new Date();
+  postedState[post.id] = { postedBy: member, postedAt: "Today, " + now.toLocaleTimeString("en-GB", { hour:"2-digit", minute:"2-digit" }) };
+  window.open("https://www.linkedin.com/feed/?shareActive=true&text=" + encodeURIComponent(post.copy), "_blank");
+  closeModal();
+  updateStats();
+  renderPosts();
+  showToast("Text copied and LinkedIn opened.");
+}
+
+function showToast(msg) {
+  const t = document.getElementById("toast");
+  document.getElementById("toast-msg").textContent = msg;
+  t.classList.add("show");
+  setTimeout(() => t.classList.remove("show"), 3200);
+}
+
+document.getElementById("status-filters").querySelectorAll(".filter-btn").forEach(btn => {
+  btn.addEventListener("click", () => {
+    document.getElementById("status-filters").querySelectorAll(".filter-btn").forEach(b => b.classList.remove("active"));
+    btn.classList.add("active");
+    currentStatus = btn.dataset.status;
+    renderPosts();
+  });
+});
+
+document.getElementById("modal-close-btn").addEventListener("click", closeModal);
+document.getElementById("modal-cancel-btn").addEventListener("click", closeModal);
+document.getElementById("modal-confirm-btn").addEventListener("click", confirmPost);
+document.getElementById("modal-overlay").addEventListener("click", e => { if (e.target === document.getElementById("modal-overlay")) closeModal(); });
+
+loadPosts();
+</script>
+</body>
+</html>
