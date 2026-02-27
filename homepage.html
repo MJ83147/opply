@@ -1,0 +1,777 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Opply Homepage Wireframe</title>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700;800&family=Fira+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  /* ─── WIREFRAME PALETTE ─── */
+  :root {
+    --ink:       #1A1A1A;
+    --ink-mid:   #555555;
+    --ink-light: #888888;
+    --rule:      #CCCCCC;
+    --fill-1:    #F5F5F5;
+    --fill-2:    #EBEBEB;
+    --fill-dark: #2A2A2A;
+    --fill-mid:  #444444;
+    --white:     #FFFFFF;
+    --ph-border: #AAAAAA;
+    --ph-fill:   #E8E8E8;
+    --accent:    #333333;
+    --radius:    12px;
+    --radius-sm: 8px;
+    --radius-xs: 6px;
+    --max:       1120px;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: 'Fira Sans', sans-serif; color: var(--ink); background: var(--white); line-height: 1.6; -webkit-font-smoothing: antialiased; }
+
+  /* ─── DEV NOTE ─── */
+  .dev-note { position: fixed; top: 12px; right: 12px; background: var(--ink); color: var(--white); font-size: 10px; font-weight: 600; letter-spacing: 1.2px; text-transform: uppercase; padding: 5px 12px; border-radius: var(--radius-xs); z-index: 200; }
+
+  /* ─── NAV ─── */
+  .nav { background: var(--white); border-bottom: 1.5px solid var(--rule); padding: 14px 0; position: sticky; top: 0; z-index: 100; }
+  .nav-inner { max-width: var(--max); margin: 0 auto; padding: 0 32px; display: flex; align-items: center; justify-content: space-between; }
+  .nav-logo { font-family: 'Poppins', sans-serif; font-weight: 800; font-size: 24px; color: var(--ink); text-decoration: none; }
+  .nav-links { display: flex; align-items: center; gap: 28px; }
+  .nav-link { font-size: 14px; font-weight: 500; color: var(--ink-mid); text-decoration: none; }
+  .nav-btn { font-size: 14px; font-weight: 600; background: var(--ink); color: var(--white); padding: 9px 22px; border-radius: 100px; text-decoration: none; }
+
+  /* ─── SHARED ─── */
+  .inner { max-width: var(--max); margin: 0 auto; padding: 0 32px; }
+  .label { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 1.6px; color: var(--ink-light); margin-bottom: 10px; }
+  .h2 { font-family: 'Poppins', sans-serif; font-weight: 700; font-size: 30px; color: var(--ink); line-height: 1.25; margin-bottom: 12px; }
+  .h3 { font-family: 'Poppins', sans-serif; font-weight: 700; font-size: 18px; color: var(--ink); line-height: 1.3; margin-bottom: 8px; }
+  .body-text { font-size: 15px; color: var(--ink-mid); line-height: 1.7; }
+  .small-text { font-size: 13px; color: var(--ink-mid); line-height: 1.6; }
+  .btn { display: inline-block; font-family: 'Fira Sans', sans-serif; font-weight: 600; font-size: 14px; padding: 12px 26px; border-radius: 100px; text-decoration: none; border: 1.5px solid var(--ink); color: var(--ink); cursor: pointer; background: transparent; }
+  .btn-filled { background: var(--ink); color: var(--white); border-color: var(--ink); }
+  .btn-outline-light { border-color: rgba(255,255,255,0.3); color: rgba(255,255,255,0.8); }
+
+  /* ─── ASSET PLACEHOLDERS ─── */
+  .ph {
+    background: var(--ph-fill);
+    border: 2px dashed var(--ph-border);
+    border-radius: var(--radius);
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+    text-align: center; padding: 36px 24px; gap: 10px;
+  }
+  .ph.on-dark { background: rgba(255,255,255,0.05); border-color: rgba(255,255,255,0.2); }
+  .ph .ph-id { font-family: 'Poppins', sans-serif; font-weight: 800; font-size: 12px; letter-spacing: 0.5px; background: var(--white); border: 1.5px solid var(--ph-border); padding: 3px 12px; border-radius: 100px; color: var(--ink); }
+  .ph.on-dark .ph-id { background: rgba(255,255,255,0.1); border-color: rgba(255,255,255,0.25); color: var(--white); }
+  .ph .ph-type { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 1.4px; color: var(--ink-light); }
+  .ph.on-dark .ph-type { color: rgba(255,255,255,0.4); }
+  .ph .ph-desc { font-size: 12px; color: var(--ink-mid); line-height: 1.55; max-width: 280px; }
+  .ph.on-dark .ph-desc { color: rgba(255,255,255,0.45); }
+  .ph .ph-dims { font-size: 11px; color: var(--ink-light); font-family: monospace; }
+  .ph.on-dark .ph-dims { color: rgba(255,255,255,0.25); }
+
+  /* Photo placeholder */
+  .photo-ph { background: var(--fill-2); border: 1.5px dashed var(--ph-border); border-radius: 50%; display: flex; align-items: center; justify-content: center; flex-shrink: 0; font-size: 9px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.8px; color: var(--ink-light); }
+
+  /* ─── HERO ─── */
+  .hero { background: var(--fill-dark); padding: 72px 32px 80px; }
+  .hero-inner { max-width: var(--max); margin: 0 auto; display: grid; grid-template-columns: 1fr 1fr; gap: 64px; align-items: center; }
+  .hero-eyebrow { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 1.6px; color: rgba(255,255,255,0.5); margin-bottom: 18px; }
+  .hero h1 { font-family: 'Poppins', sans-serif; font-weight: 800; font-size: 44px; color: var(--white); line-height: 1.15; margin-bottom: 18px; letter-spacing: -0.5px; }
+  .hero h1 em { font-style: normal; color: #BBBBBB; }
+  .hero-sub { font-size: 16px; color: rgba(255,255,255,0.55); line-height: 1.7; margin-bottom: 32px; }
+  .hero-ctas { display: flex; gap: 12px; flex-wrap: wrap; }
+
+  /* ─── LOGOS ─── */
+  .logos { padding: 28px 32px; border-bottom: 1.5px solid var(--rule); }
+  .logos-inner { max-width: var(--max); margin: 0 auto; }
+  .logos-label { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 1.2px; color: var(--ink-light); margin-bottom: 16px; text-align: center; }
+  .logos-row { display: flex; align-items: center; justify-content: center; gap: 32px; flex-wrap: wrap; }
+  .logo-item { font-family: 'Poppins', sans-serif; font-weight: 700; font-size: 13px; color: var(--ink); opacity: 0.2; }
+
+  /* ─── WHAT IS OPPLY ─── */
+  .what { padding: 80px 32px; background: var(--white); }
+  .what-inner { max-width: var(--max); margin: 0 auto; }
+  .what-header { max-width: 640px; margin-bottom: 52px; }
+  .what-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
+  .what-card { background: var(--fill-1); border: 1.5px solid var(--rule); border-radius: var(--radius); padding: 28px 24px; }
+  .what-card-num { font-family: 'Poppins', sans-serif; font-weight: 800; font-size: 11px; text-transform: uppercase; letter-spacing: 2px; color: var(--ink-light); margin-bottom: 14px; }
+  .what-card-stat { display: inline-flex; align-items: baseline; gap: 6px; background: var(--white); border: 1.5px solid var(--rule); border-radius: var(--radius-xs); padding: 7px 14px; margin-top: 16px; }
+  .what-card-stat-num { font-family: 'Poppins', sans-serif; font-weight: 800; font-size: 22px; color: var(--ink); }
+  .what-card-stat-label { font-size: 11px; color: var(--ink-light); }
+  .stat-context { display: block; font-size: 10px; color: var(--ink-light); margin-top: 1px; }
+
+  /* ─── PILLAR SECTIONS ─── */
+  .pillar { padding: 88px 32px; }
+  .pillar-light { background: var(--white); }
+  .pillar-mid { background: var(--fill-1); }
+  .pillar-dark { background: var(--fill-dark); }
+  .pillar-inner { max-width: var(--max); margin: 0 auto; display: grid; grid-template-columns: 1fr 1fr; gap: 72px; align-items: center; }
+  .pillar-flip { direction: rtl; }
+  .pillar-flip > * { direction: ltr; }
+  .pillar-num { font-family: 'Poppins', sans-serif; font-weight: 800; font-size: 10px; color: var(--ink-light); letter-spacing: 2px; text-transform: uppercase; margin-bottom: 10px; }
+  .pillar-num-light { color: rgba(255,255,255,0.3); }
+  .pillar-content-dark .h2 { color: var(--white); }
+  .pillar-content-dark .body-text { color: rgba(255,255,255,0.55); }
+  .pillar-stat { background: var(--fill-2); border: 1.5px solid var(--rule); border-radius: var(--radius-xs); padding: 12px 18px; display: inline-flex; align-items: baseline; gap: 10px; margin-top: 4px; }
+  .pillar-stat-dark { background: rgba(255,255,255,0.07); border-color: rgba(255,255,255,0.12); }
+  .pillar-stat-num { font-family: 'Poppins', sans-serif; font-weight: 800; font-size: 26px; color: var(--ink); }
+  .pillar-stat-dark .pillar-stat-num { color: var(--white); }
+  .pillar-stat-label { font-size: 12px; color: var(--ink-mid); line-height: 1.4; }
+  .pillar-stat-dark .pillar-stat-label { color: rgba(255,255,255,0.4); }
+
+  /* ─── SUPPLIER MANAGEMENT ─── */
+  .supplier-mgmt { padding: 80px 32px; background: var(--fill-1); border-top: 1.5px solid var(--rule); border-bottom: 1.5px solid var(--rule); }
+  .supplier-mgmt-inner { max-width: var(--max); margin: 0 auto; display: grid; grid-template-columns: 1fr 1fr; gap: 72px; align-items: center; }
+  .supplier-features { display: flex; flex-direction: column; gap: 20px; margin-top: 28px; }
+  .supplier-feature { display: flex; gap: 14px; align-items: flex-start; }
+  .supplier-feature-icon { width: 36px; height: 36px; border-radius: var(--radius-xs); background: var(--fill-2); border: 1.5px solid var(--rule); flex-shrink: 0; display: flex; align-items: center; justify-content: center; }
+  .supplier-feature-icon svg { width: 16px; height: 16px; stroke: var(--ink-mid); fill: none; stroke-width: 1.8; }
+  .supplier-feature-text {}
+  .supplier-feature-title { font-family: 'Poppins', sans-serif; font-weight: 600; font-size: 14px; color: var(--ink); margin-bottom: 3px; }
+  .supplier-feature-desc { font-size: 13px; color: var(--ink-mid); line-height: 1.55; }
+
+  /* ─── SOCIAL PROOF ─── */
+  .social-proof { padding: 72px 32px; background: var(--white); }
+  .social-proof-inner { max-width: var(--max); margin: 0 auto; }
+  .social-proof-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-top: 32px; }
+  .sp-card { background: var(--fill-1); border: 1.5px solid var(--rule); border-radius: var(--radius-sm); padding: 22px 20px; display: flex; flex-direction: column; gap: 16px; }
+  .sp-quote { font-size: 13px; color: var(--ink-mid); line-height: 1.6; font-style: italic; flex: 1; }
+  .sp-person { display: flex; align-items: center; gap: 10px; }
+  .sp-name { font-size: 13px; font-weight: 600; color: var(--ink); }
+  .sp-role { font-size: 12px; color: var(--ink-light); }
+
+  /* ─── STAT STRIP ─── */
+  .stat-strip { padding: 56px 32px; background: var(--fill-dark); }
+  .stat-strip-inner { max-width: var(--max); margin: 0 auto; display: grid; grid-template-columns: repeat(3, 1fr); gap: 0; }
+  .stat-strip-item { text-align: center; padding: 0 24px; border-right: 1px solid rgba(255,255,255,0.08); }
+  .stat-strip-item:last-child { border-right: none; }
+  .stat-strip-num { font-family: 'Poppins', sans-serif; font-weight: 800; font-size: 44px; color: var(--white); line-height: 1; margin-bottom: 10px; }
+  .stat-strip-label { font-size: 13px; color: rgba(255,255,255,0.45); line-height: 1.5; }
+  .stat-strip-source { font-size: 10px; color: rgba(255,255,255,0.2); margin-top: 4px; font-style: italic; }
+
+  /* ─── TESTIMONIALS ─── */
+  .testi { padding: 80px 32px; background: var(--fill-1); }
+  .testi-inner { max-width: var(--max); margin: 0 auto; }
+  .testi-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-top: 36px; }
+  .testi-card { background: var(--white); border: 1.5px solid var(--rule); border-radius: var(--radius); padding: 32px 28px; display: flex; flex-direction: column; gap: 20px; }
+  .testi-card.featured { background: var(--fill-dark); border-color: var(--fill-dark); }
+  .testi-tag { display: inline-block; background: var(--fill-2); border: 1.5px solid var(--rule); border-radius: var(--radius-xs); padding: 4px 12px; font-size: 11px; font-weight: 600; color: var(--ink-mid); align-self: flex-start; }
+  .testi-card.featured .testi-tag { background: rgba(255,255,255,0.08); border-color: rgba(255,255,255,0.15); color: rgba(255,255,255,0.6); }
+  .testi-quote { font-family: 'Poppins', sans-serif; font-size: 15px; font-weight: 500; line-height: 1.65; color: var(--ink); font-style: italic; flex: 1; }
+  .testi-card.featured .testi-quote { color: rgba(255,255,255,0.85); }
+  .testi-attr { display: flex; align-items: center; gap: 12px; }
+  .testi-name { font-size: 14px; font-weight: 600; color: var(--ink); }
+  .testi-card.featured .testi-name { color: var(--white); }
+  .testi-role { font-size: 13px; color: var(--ink-light); }
+  .testi-card.featured .testi-role { color: rgba(255,255,255,0.4); }
+  .testi-footer { margin-top: 24px; text-align: center; }
+  .testi-footer a { font-size: 14px; font-weight: 600; color: var(--ink); text-decoration: none; }
+
+  /* ─── COMPARE ─── */
+  .compare { padding: 80px 32px; background: var(--white); }
+  .compare-inner { max-width: 1000px; margin: 0 auto; }
+  .compare table { width: 100%; border-collapse: collapse; border: 1.5px solid var(--rule); border-radius: var(--radius); overflow: hidden; margin-top: 36px; }
+  .compare th { font-family: 'Poppins', sans-serif; font-weight: 600; font-size: 13px; padding: 14px 18px; text-align: center; background: var(--fill-1); color: var(--ink-mid); border-bottom: 1.5px solid var(--rule); }
+  .compare th.col-op { background: var(--fill-dark); color: var(--white); }
+  .compare td { font-size: 13px; padding: 12px 18px; text-align: center; border-bottom: 1.5px solid var(--rule); color: var(--ink-mid); }
+  .compare td:first-child { text-align: left; font-weight: 500; color: var(--ink); }
+  .compare td.col-op { background: var(--fill-1); }
+  .compare tr:last-child td { border-bottom: none; }
+  .tick { color: var(--ink); font-size: 16px; font-weight: 700; }
+  .cross { color: var(--rule); font-size: 16px; }
+
+  /* ─── WHO ─── */
+  .who { padding: 80px 32px; background: var(--fill-1); }
+  .who-inner { max-width: var(--max); margin: 0 auto; }
+  .who-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 20px; margin-top: 40px; }
+  .who-card { background: var(--white); border: 1.5px solid var(--rule); border-radius: var(--radius); overflow: hidden; }
+  .who-img { height: 160px; background: var(--fill-2); border-bottom: 2px dashed var(--ph-border); display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 6px; padding: 16px; text-align: center; }
+  .who-img-label { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 1.2px; color: var(--ink-light); background: var(--white); border: 1.5px solid var(--rule); padding: 3px 10px; border-radius: 100px; }
+  .who-img-note { font-size: 11px; color: var(--ink-light); max-width: 160px; line-height: 1.4; }
+  .who-body { padding: 24px; }
+  .who-stage { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 1.4px; color: var(--ink-light); margin-bottom: 8px; }
+  .who-body h3 { font-family: 'Poppins', sans-serif; font-weight: 700; font-size: 16px; color: var(--ink); margin-bottom: 8px; line-height: 1.3; }
+  .who-body p { font-size: 13px; color: var(--ink-mid); line-height: 1.6; margin-bottom: 18px; }
+  .who-link { font-size: 13px; font-weight: 600; color: var(--ink); text-decoration: none; }
+
+  /* ─── BOTTOM CTA ─── */
+  .bottom-cta { padding: 88px 32px; background: var(--white); }
+  .bottom-cta-inner { max-width: var(--max); margin: 0 auto; display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+  .cta-block { border-radius: var(--radius); padding: 40px 36px; }
+  .cta-block.dark { background: var(--fill-dark); }
+  .cta-block.light { background: var(--fill-1); border: 1.5px solid var(--rule); }
+  .cta-block h3 { font-family: 'Poppins', sans-serif; font-weight: 700; font-size: 22px; line-height: 1.3; margin-bottom: 10px; }
+  .cta-block.dark h3 { color: var(--white); }
+  .cta-block.light h3 { color: var(--ink); }
+  .cta-block p { font-size: 14px; line-height: 1.65; margin-bottom: 28px; }
+  .cta-block.dark p { color: rgba(255,255,255,0.5); }
+  .cta-block.light p { color: var(--ink-mid); }
+
+  /* ─── FOOTER ─── */
+  .footer { padding: 28px 32px; border-top: 1.5px solid var(--rule); }
+  .footer-inner { max-width: var(--max); margin: 0 auto; display: flex; align-items: center; justify-content: space-between; }
+  .footer-brand { font-family: 'Poppins', sans-serif; font-weight: 800; font-size: 20px; color: var(--ink); text-decoration: none; }
+  .footer-links { display: flex; gap: 20px; }
+  .footer-links a { font-size: 13px; color: var(--ink-mid); text-decoration: none; }
+  .footer-copy { font-size: 11px; color: var(--ink-light); }
+
+  @media (max-width: 960px) {
+    .hero-inner, .pillar-inner, .pillar-flip, .supplier-mgmt-inner, .bottom-cta-inner { grid-template-columns: 1fr; direction: ltr; }
+    .pillar-flip > * { direction: ltr; }
+    .hero h1 { font-size: 34px; }
+    .what-grid, .who-grid, .testi-grid, .social-proof-grid { grid-template-columns: 1fr; }
+    .footer-inner { flex-direction: column; gap: 12px; text-align: center; }
+    .nav-links .nav-link { display: none; }
+  }
+</style>
+</head>
+<body>
+
+<div class="dev-note">Wireframe, structure only</div>
+
+<!-- NAV -->
+<nav class="nav">
+  <div class="nav-inner">
+    <a class="nav-logo" href="#">Opply</a>
+    <div class="nav-links">
+      <a class="nav-link" href="#">Sourcing</a>
+      <a class="nav-link" href="#">Order Management</a>
+      <a class="nav-link" href="#">Case Studies</a>
+      <a class="nav-btn" href="#">Book a demo</a>
+    </div>
+  </div>
+</nav>
+
+<!-- ① HERO -->
+<section class="hero">
+  <div class="hero-inner">
+    <div>
+      <h1>Automated operations for food and beverage brands</h1>
+      <p class="hero-sub" style="margin-bottom:32px;">500+ verified suppliers. 98% on-time delivery. One consolidated invoice. The platform manages your entire supply chain so you never hire an ops team.</p>
+      <div class="hero-ctas">
+        <a class="btn btn-filled" href="#">Book a free ops review</a>
+        <a class="btn btn-outline-light" href="#">Calculate your savings</a>
+      </div>
+    </div>
+
+    <div class="ph on-dark" style="min-height:360px;">
+      <span class="ph-id">H-01</span>
+      <span class="ph-type">Illustration</span>
+      <p class="ph-desc">Visual summary of Opply's end-to-end value: a brand hands over their supply chain, Opply runs it, outcomes appear the other side.</p>
+      <span class="ph-dims">1920 x 1080px</span>
+    </div>
+  </div>
+</section>
+
+<!-- ② LOGOS -->
+<section class="logos">
+  <div class="logos-inner">
+    <div class="logos-label">Trusted by growing F&B brands</div>
+    <div class="logos-row">
+      <span class="logo-item">Dirtea</span>
+      <span class="logo-item">Batch</span>
+      <span class="logo-item">Punchy</span>
+      <span class="logo-item">Borough Broth</span>
+      <span class="logo-item">Hip Pop</span>
+      <span class="logo-item">Bonraw</span>
+      <span class="logo-item">Jukes</span>
+      <span class="logo-item">Unrooted</span>
+      <span class="logo-item">Biomel</span>
+      <span class="logo-item">Agua de Madre</span>
+    </div>
+  </div>
+</section>
+
+<!-- ③ WHAT IS OPPLY: four-stage intro -->
+<section class="what">
+  <div class="what-inner">
+    <div class="what-header">
+      <div class="label">How it works</div>
+      <h2 class="h2">Opply manages every part of your supply chain</h2>
+      <p class="body-text">Planning, ordering, logistics, and payments, automated.</p>
+    </div>
+    <div class="what-grid" style="grid-template-columns: repeat(4, 1fr);">
+
+      <div class="what-card">
+        <div class="what-card-num">01 &nbsp; Planning</div>
+        <h3 class="h3">Ingredient quantities calculated automatically</h3>
+        <p class="small-text">Ingredient quantities calculated automatically across your full product range.</p>
+      </div>
+
+      <div class="what-card">
+        <div class="what-card-num">02 &nbsp; Ordering</div>
+        <h3 class="h3">Orders placed across all your suppliers at once</h3>
+        <p class="small-text">Orders placed across your entire supplier network at once, including better rates you couldn't negotiate alone.</p>
+        <div class="what-card-stat">
+          <span class="what-card-stat-num">30%</span>
+          <span class="what-card-stat-label">typical COGS reduction</span>
+        </div>
+      </div>
+
+      <div class="what-card">
+        <div class="what-card-num">03 &nbsp; Logistics</div>
+        <h3 class="h3">Deliveries tracked and aligned end to end</h3>
+        <p class="small-text">Deliveries managed end to end. Lead times aligned. Nothing arrives late or wrong.</p>
+        <div class="what-card-stat">
+          <span class="what-card-stat-num">98%</span>
+          <span class="what-card-stat-label">OTIF<span class="stat-context">vs. 60% industry avg.</span></span>
+        </div>
+      </div>
+
+      <div class="what-card">
+        <div class="what-card-num">04 &nbsp; Payments</div>
+        <h3 class="h3">Every supplier, one invoice</h3>
+        <p class="small-text">All supplier costs consolidated into a single monthly bill with up to 90 day payment terms.</p>
+        <div class="what-card-stat">
+          <span class="what-card-stat-num">90</span>
+          <span class="what-card-stat-label">day payment terms</span>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ④ PILLAR 1: PLANNING -->
+<section class="pillar pillar-light" style="border-top:1.5px solid var(--rule);">
+  <div class="pillar-inner">
+    <div>
+      <div class="pillar-num">01 &nbsp; Planning</div>
+      <h2 class="h2">Full visibility of what to order, when, and how much</h2>
+      <p class="body-text" style="margin-bottom:24px;">Opply calculates quantities across your full range automatically. You see exactly what needs to go out, and when, before anything is placed.</p>
+    </div>
+
+    <div class="ph" style="min-height:360px;">
+      <span class="ph-id">Dashboard UI</span>
+      <span class="ph-type">UI Mockup</span>
+      <p class="ph-desc">Dashboard view. Active contracts, ingredient line items, and the Order Activity feed showing Opply handling things on the brand's behalf. Outcome state, not a setup screen.</p>
+      <span class="ph-dims">1440 x 960px</span>
+    </div>
+  </div>
+</section>
+
+<!-- ⑤ PILLAR 2: ORDERING -->
+<section class="pillar pillar-dark">
+  <div class="pillar-inner pillar-flip">
+    <div class="pillar-content-dark">
+      <div class="pillar-num pillar-num-light">02 &nbsp; Ordering</div>
+      <h2 class="h2" style="color:var(--white);">Better pricing from day one, across every supplier</h2>
+      <p class="body-text" style="color:rgba(255,255,255,0.55);margin-bottom:24px;">Opply manages your entire supplier base: our network, your existing relationships, or both. Orders are placed, communication is handled, and aggregated demand unlocks pricing you could not negotiate alone.</p>
+      <div class="pillar-stat pillar-stat-dark">
+        <span class="pillar-stat-num">30%</span>
+        <span class="pillar-stat-label" style="color:rgba(255,255,255,0.45);">typical reduction in COGS</span>
+      </div>
+    </div>
+
+    <div class="ph on-dark" style="min-height:360px;">
+      <span class="ph-id">Illustration 1</span>
+      <span class="ph-type">Illustration</span>
+      <p class="ph-desc">Supplier Access. Multiple suppliers across different categories connected through Opply, with a brand on the other side accessing all of them through a single relationship.</p>
+      <span class="ph-dims">SVG or PNG 2x</span>
+    </div>
+  </div>
+</section>
+
+<!-- ⑥ PILLAR 3: LOGISTICS -->
+<section class="pillar pillar-light">
+  <div class="pillar-inner">
+    <div>
+      <div class="pillar-num">03 &nbsp; Logistics</div>
+      <h2 class="h2">98% on-time, in-full delivery across your entire supplier base</h2>
+      <p class="body-text" style="margin-bottom:24px;">Opply tracks every delivery end to end. Lead times are aligned across all suppliers and issues are resolved before they reach you.</p>
+      <div class="pillar-stat">
+        <span class="pillar-stat-num">98%</span>
+        <span class="pillar-stat-label">OTIF<span class="stat-context">vs. 60% industry average</span></span>
+      </div>
+    </div>
+
+    <div class="ph" style="min-height:360px;">
+      <span class="ph-id">Orders UI</span>
+      <span class="ph-type">UI Mockup (illustrated)</span>
+      <p class="ph-desc">Orders view in a healthy running state. Confirmed orders, in-transit deliveries, recently delivered lines. Nothing pending, nothing waiting for action.</p>
+      <span class="ph-dims">1440 x 960px</span>
+    </div>
+  </div>
+</section>
+
+<!-- ⑦ PILLAR 4: PAYMENTS -->
+<section class="pillar pillar-dark" style="border-bottom:1.5px solid rgba(255,255,255,0.06);">
+  <div class="pillar-inner pillar-flip">
+    <div class="pillar-content-dark">
+      <div class="pillar-num pillar-num-light">04 &nbsp; Payments</div>
+      <h2 class="h2" style="color:var(--white);">Every supplier, one invoice, 90 days to pay</h2>
+      <p class="body-text" style="color:rgba(255,255,255,0.55);margin-bottom:24px;">All your supplier costs land in a single monthly bill. Payment terms of up to 90 days mean you're not tying up cash before your customers have paid you.</p>
+      <div class="pillar-stat pillar-stat-dark">
+        <span class="pillar-stat-num">90</span>
+        <span class="pillar-stat-label" style="color:rgba(255,255,255,0.45);">day payment terms available</span>
+      </div>
+    </div>
+
+    <div class="ph on-dark" style="min-height:360px;">
+      <span class="ph-id">Illustration 3</span>
+      <span class="ph-type">Illustration</span>
+      <p class="ph-desc">Cost Visibility. A founder-level view of ingredient costs: the price is already there, already good, and the negotiation has already happened on their behalf.</p>
+      <span class="ph-dims">SVG or PNG 2x</span>
+    </div>
+  </div>
+</section>
+
+<!-- ⑤ SUPPLIER MANAGEMENT -->
+<section class="supplier-mgmt">
+  <div class="supplier-mgmt-inner">
+    <div>
+      <div class="label">Supplier management</div>
+      <h2 class="h2">Your supplier network, without the admin</h2>
+      <p class="body-text" style="margin-bottom:0;">Opply manages performance, certifications, specs, and communication across every supplier. Bring your own or use ours.</p>
+      <div class="supplier-features">
+
+        <div class="supplier-feature">
+          <div class="supplier-feature-icon">
+            <svg viewBox="0 0 16 16"><circle cx="8" cy="8" r="6"/><path d="M5 8l2 2 4-4"/></svg>
+          </div>
+          <div class="supplier-feature-text">
+            <div class="supplier-feature-title">Verified supplier network</div>
+            <p class="supplier-feature-desc">Every supplier vetted for certifications, compliance, and delivery reliability before your first order.</p>
+          </div>
+        </div>
+
+        <div class="supplier-feature">
+          <div class="supplier-feature-icon">
+            <svg viewBox="0 0 16 16"><path d="M8 2v4l3 3"/><circle cx="8" cy="8" r="6"/></svg>
+          </div>
+          <div class="supplier-feature-text">
+            <div class="supplier-feature-title">Performance tracking</div>
+            <p class="supplier-feature-desc">OTIF rates, lead times, and pricing history tracked across every supplier. You see the data. Opply acts on it.</p>
+          </div>
+        </div>
+
+        <div class="supplier-feature">
+          <div class="supplier-feature-icon">
+            <svg viewBox="0 0 16 16"><path d="M2 8h12M8 2l6 6-6 6"/></svg>
+          </div>
+          <div class="supplier-feature-text">
+            <div class="supplier-feature-title">Specs and certifications</div>
+            <p class="supplier-feature-desc">All supplier documentation held and managed by Opply. No chasing paperwork.</p>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <div class="ph" style="min-height:380px;">
+      <span class="ph-id">Suppliers UI</span>
+      <span class="ph-type">UI Mockup</span>
+      <p class="ph-desc">Suppliers view. Onboarded suppliers with Ready To Trade status, plus suppliers in progress showing Opply actively working on onboarding. The work is happening without the founder doing it.</p>
+      <span class="ph-dims">1440 x 960px</span>
+    </div>
+  </div>
+</section>
+
+<!-- AI AGENTS SECTION -->
+<section class="pillar pillar-light" style="border-top:1.5px solid var(--rule);border-bottom:1.5px solid var(--rule);">
+  <div class="pillar-inner">
+    <div>
+      <div class="label">Powered by AI</div>
+      <h2 class="h2">Automated by AI. Overseen by F&B specialists.</h2>
+      <p class="body-text" style="margin-bottom:28px;">Opply's AI agents handle the operational volume that used to require a full team: monitoring stock, placing orders, aligning lead times, managing supplier communication. Every action is visible, and your dedicated account manager is always in the loop.</p>
+      <div class="supplier-features">
+
+        <div class="supplier-feature">
+          <div class="supplier-feature-icon">
+            <svg viewBox="0 0 16 16"><path d="M3 8h10M8 3l5 5-5 5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </div>
+          <div class="supplier-feature-text">
+            <div class="supplier-feature-title">Automated, not hands-off</div>
+            <p class="supplier-feature-desc">AI handles the volume. A dedicated account manager oversees your account and steps in when judgement is needed.</p>
+          </div>
+        </div>
+
+        <div class="supplier-feature">
+          <div class="supplier-feature-icon">
+            <svg viewBox="0 0 16 16"><circle cx="8" cy="8" r="6"/><path d="M8 5v3l2 2"/></svg>
+          </div>
+          <div class="supplier-feature-text">
+            <div class="supplier-feature-title">Full visibility, no micromanagement</div>
+            <p class="supplier-feature-desc">Every order, delivery, and supplier interaction is logged. You can see everything. You just don't have to do it.</p>
+          </div>
+        </div>
+
+        <div class="supplier-feature">
+          <div class="supplier-feature-icon">
+            <svg viewBox="0 0 16 16"><rect x="3" y="3" width="10" height="10" rx="2"/><path d="M6 8h4M8 6v4"/></svg>
+          </div>
+          <div class="supplier-feature-text">
+            <div class="supplier-feature-title">Better than hiring</div>
+            <p class="supplier-feature-desc">AI at scale plus F&B expertise means Opply can do in seconds what would take an ops hire hours, at a fraction of the cost.</p>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <div class="ph" style="min-height:380px;">
+      <span class="ph-id">Illustration 4</span>
+      <span class="ph-type">Illustration</span>
+      <p class="ph-desc">Ops Handled. The volume of work Opply absorbs: multiple tasks across planning, ordering, logistics, and payments, all resolved. Nothing left for the founder to action.</p>
+      <span class="ph-dims">SVG or PNG 2x</span>
+    </div>
+  </div>
+</section>
+
+<!-- ⑥ SOCIAL PROOF: people photos + short quotes -->
+<section class="social-proof">
+  <div class="social-proof-inner">
+    <div class="label">What founders and ops leads say</div>
+    <div class="social-proof-grid">
+
+      <div class="sp-card">
+        <p class="sp-quote">"The platform turned what was a major pain point into a seamless process, so we can focus on creating great drinks."</p>
+        <div class="sp-person">
+          <div class="photo-ph" style="width:40px;height:40px;">Photo</div>
+          <div>
+            <div class="sp-name">Amber Numamoto</div>
+            <div class="sp-role">Head of Operations</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="sp-card">
+        <p class="sp-quote">"We would never have discovered these suppliers without Opply. It's great for NPD and getting competitive rates."</p>
+        <div class="sp-person">
+          <div class="photo-ph" style="width:40px;height:40px;">Photo</div>
+          <div>
+            <div class="sp-name">Tom Smart</div>
+            <div class="sp-role">Co-Founder, Counter Culture</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="sp-card" style="border-style:dashed;background:var(--white);">
+        <p class="sp-quote" style="font-style:normal;color:var(--ink-light);font-size:12px;">[PLACEHOLDER: Need two additional short testimonials from different customers to avoid duplicating Melania and Leon, who appear in the featured section below.]</p>
+      </div>
+
+      <div class="sp-card" style="border-style:dashed;background:var(--white);">
+        <p class="sp-quote" style="font-style:normal;color:var(--ink-light);font-size:12px;">[PLACEHOLDER: Ideally one quote focused on time saved, one on delivery reliability. Request from Opply team.]</p>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ⑦ STAT STRIP -->
+<section class="stat-strip">
+  <div class="stat-strip-inner">
+    <div class="stat-strip-item">
+      <div class="stat-strip-num">0%</div>
+      <div class="stat-strip-label">Churn on full-service 12-month contracts</div>
+      <div class="stat-strip-source">Source: Opply internal data</div>
+    </div>
+    <div class="stat-strip-item">
+      <div class="stat-strip-num">6-10x</div>
+      <div class="stat-strip-label">ROI typically seen within the first three months</div>
+      <div class="stat-strip-source">Source: Opply internal data</div>
+    </div>
+    <div class="stat-strip-item">
+      <div class="stat-strip-num">1 day</div>
+      <div class="stat-strip-label">Saved per week on admin, even for smaller brands</div>
+      <div class="stat-strip-source">Source: Opply internal data</div>
+    </div>
+  </div>
+</section>
+
+<!-- ⑧ FEATURED TESTIMONIALS (sits directly below stat strip) -->
+<section class="testi">
+  <div class="testi-inner">
+    <div class="label">In their words</div>
+    <div class="testi-grid">
+
+      <div class="testi-card featured">
+        <div class="testi-tag">30% reduction in ingredient costs</div>
+        <p class="testi-quote">"Opply significantly reduced our ingredient costs by over 30% and provided all the necessary specs and certifications we needed. Their team genuinely cared about our success."</p>
+        <div class="testi-attr">
+          <div class="photo-ph" style="width:48px;height:48px;background:rgba(255,255,255,0.08);color:rgba(255,255,255,0.3);">Photo</div>
+          <div>
+            <div class="testi-name">Melania Borges</div>
+            <div class="testi-role">Head of Production</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="testi-card">
+        <div class="testi-tag">Supply chain confidence at scale</div>
+        <p class="testi-quote">"Opply have given us the confidence that our supply chain can scale with our brand. They feel like an extension of the Agua de Madre team."</p>
+        <div class="testi-attr">
+          <div class="photo-ph" style="width:48px;height:48px;">Photo</div>
+          <div>
+            <div class="testi-name">Leon Pullin</div>
+            <div class="testi-role">Managing Director, Agua de Madre</div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ⑨ COMPARISON TABLE -->
+<section class="compare">
+  <div class="compare-inner">
+    <div class="label">Why Opply</div>
+    <h2 class="h2">Most solutions solve one part of the problem</h2>
+    <p class="body-text">ERP handles ordering. BNPL handles payment terms. AP software handles invoices. Opply handles all of it.</p>
+    <table>
+      <thead>
+        <tr>
+          <th style="text-align:left;">Capability</th>
+          <th class="col-op">Opply</th>
+          <th>Hiring ops</th>
+          <th>ERP</th>
+          <th>AP software</th>
+          <th>BNPL</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Production planning and quantity calculation</td>
+          <td class="col-op"><span class="tick">&#10003;</span></td>
+          <td><span class="cross">&#10005;</span></td>
+          <td><span class="tick">&#10003;</span></td>
+          <td><span class="cross">&#10005;</span></td>
+          <td><span class="cross">&#10005;</span></td>
+        </tr>
+        <tr>
+          <td>Supplier access and price negotiation</td>
+          <td class="col-op"><span class="tick">&#10003;</span></td>
+          <td><span class="tick">&#10003;</span></td>
+          <td><span class="cross">&#10005;</span></td>
+          <td><span class="cross">&#10005;</span></td>
+          <td><span class="cross">&#10005;</span></td>
+        </tr>
+        <tr>
+          <td>Automated order placement</td>
+          <td class="col-op"><span class="tick">&#10003;</span></td>
+          <td><span class="cross">&#10005;</span></td>
+          <td><span class="tick">&#10003;</span></td>
+          <td><span class="cross">&#10005;</span></td>
+          <td><span class="cross">&#10005;</span></td>
+        </tr>
+        <tr>
+          <td>Supplier communication and management</td>
+          <td class="col-op"><span class="tick">&#10003;</span></td>
+          <td><span class="tick">&#10003;</span></td>
+          <td><span class="cross">&#10005;</span></td>
+          <td><span class="cross">&#10005;</span></td>
+          <td><span class="cross">&#10005;</span></td>
+        </tr>
+        <tr>
+          <td>Lead time alignment and delivery tracking</td>
+          <td class="col-op"><span class="tick">&#10003;</span></td>
+          <td><span class="tick">&#10003;</span></td>
+          <td><span class="cross">&#10005;</span></td>
+          <td><span class="cross">&#10005;</span></td>
+          <td><span class="cross">&#10005;</span></td>
+        </tr>
+        <tr>
+          <td>Invoice consolidation</td>
+          <td class="col-op"><span class="tick">&#10003;</span></td>
+          <td><span class="cross">&#10005;</span></td>
+          <td><span class="cross">&#10005;</span></td>
+          <td><span class="tick">&#10003;</span></td>
+          <td><span class="cross">&#10005;</span></td>
+        </tr>
+        <tr>
+          <td>60 to 90 day payment terms</td>
+          <td class="col-op"><span class="tick">&#10003;</span></td>
+          <td><span class="cross">&#10005;</span></td>
+          <td><span class="cross">&#10005;</span></td>
+          <td><span class="cross">&#10005;</span></td>
+          <td><span class="tick">&#10003;</span></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<!-- ⑩ WHO WE HELP -->
+<section class="who">
+  <div class="who-inner">
+    <div class="label">Who we help</div>
+    <h2 class="h2">Whether you make the product or manufacture it</h2>
+    <div class="who-grid">
+
+      <div class="who-card">
+        <div class="who-img">
+          <span class="who-img-label">Brand photo</span>
+          <p class="who-img-note">Start-up founder context</p>
+        </div>
+        <div class="who-body">
+          <div class="who-stage">Start-ups</div>
+          <h3>Scale without your first ops hire</h3>
+          <p>You should not need a procurement team to get good pricing or reliable deliveries. Opply gives early stage brands the supply chain infrastructure of a much larger business.</p>
+          <a class="who-link" href="#">Learn more &#8594;</a>
+        </div>
+      </div>
+
+      <div class="who-card">
+        <div class="who-img">
+          <span class="who-img-label">Brand photo</span>
+          <p class="who-img-note">Scale-up / production context</p>
+        </div>
+        <div class="who-body">
+          <div class="who-stage">Scale-ups</div>
+          <h3>Double the volume without doubling the team</h3>
+          <p>More SKUs, more suppliers, more complexity. Opply absorbs the operational load so your team stays focused on product and distribution.</p>
+          <a class="who-link" href="#">Learn more &#8594;</a>
+        </div>
+      </div>
+
+      <div class="who-card">
+        <div class="who-img">
+          <span class="who-img-label">Brand photo</span>
+          <p class="who-img-note">Co-manufacturer / production floor context</p>
+        </div>
+        <div class="who-body">
+          <div class="who-stage">Co-manufacturers</div>
+          <h3>Lower costs for you. Better fulfilment for your clients.</h3>
+          <p>Opply cuts ingredient costs and supplier admin without changing how you operate. Your clients see better pricing and more reliable delivery.</p>
+          <a class="who-link" href="#">Learn more &#8594;</a>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ⑩ BOTTOM DUAL CTA -->
+<section class="bottom-cta">
+  <div class="bottom-cta-inner">
+    <div class="cta-block dark">
+      <h3>See what Opply could save your brand</h3>
+      <p>Book a free 30-minute ops review with one of our F&B supply chain specialists. No obligation, just clarity on where your ops can improve.</p>
+      <a class="btn" style="background:var(--white);color:var(--ink);border-color:var(--white);" href="#">Book a free ops review</a>
+    </div>
+    <div class="cta-block light">
+      <h3>Find out what you could save in under two minutes</h3>
+      <p>Enter your current ingredient spend and supplier setup. The calculator shows you the cost savings and time savings Opply typically delivers for brands like yours.</p>
+      <a class="btn btn-filled" href="#">Calculate your savings</a>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer class="footer">
+  <div class="footer-inner">
+    <a class="footer-brand" href="#">Opply</a>
+    <div class="footer-links">
+      <a href="#">Sourcing</a>
+      <a href="#">Order Management</a>
+      <a href="#">Case Studies</a>
+      <a href="#">About</a>
+    </div>
+    <div class="footer-copy">Opply Ltd &middot; London &middot; Chicago</div>
+  </div>
+</footer>
+
+</body>
+</html>
