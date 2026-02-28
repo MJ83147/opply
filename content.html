@@ -197,6 +197,97 @@
   }
   .filter-select:focus { outline: none; border-color: var(--navy); }
 
+  /* Custom theme dropdown */
+  .custom-dropdown {
+    position: relative;
+    min-width: 180px;
+  }
+
+  .custom-dropdown-trigger {
+    width: 100%;
+    background: var(--white);
+    border: 1px solid var(--border);
+    color: var(--text);
+    padding: 7px 30px 7px 11px;
+    border-radius: 7px;
+    font-size: 12px;
+    font-weight: 500;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    position: relative;
+    text-align: left;
+    transition: border-color 0.15s;
+    font-family: inherit;
+  }
+  .custom-dropdown-trigger:after {
+    content: "";
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 10px;
+    height: 6px;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'%3E%3Cpath d='M1 1l4 4 4-4' stroke='%23888899' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+  }
+  .custom-dropdown-trigger:hover { border-color: var(--navy); }
+  .custom-dropdown.open .custom-dropdown-trigger { border-color: var(--navy); }
+
+  .custom-dropdown-menu {
+    display: none;
+    position: absolute;
+    top: calc(100% + 4px);
+    left: 0;
+    min-width: 240px;
+    background: var(--white);
+    border: 1px solid var(--border);
+    border-radius: 9px;
+    box-shadow: 0 8px 24px rgba(10,5,40,0.12);
+    z-index: 50;
+    overflow: hidden;
+    padding: 4px;
+  }
+  .custom-dropdown.open .custom-dropdown-menu { display: block; }
+
+  .custom-dropdown-group-label {
+    font-size: 9px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.7px;
+    color: var(--muted);
+    padding: 8px 10px 4px;
+  }
+
+  .custom-dropdown-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 6px 10px;
+    border-radius: 6px;
+    font-size: 12px;
+    cursor: pointer;
+    color: var(--text);
+    transition: background 0.1s;
+  }
+  .custom-dropdown-item:hover { background: var(--off-white); }
+  .custom-dropdown-item.selected { background: var(--off-white); font-weight: 600; }
+
+  .custom-dropdown-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+
+  .dot-operations { background: #f59e0b; }
+  .dot-supplier { background: #0ea5e9; }
+  .dot-growing { background: #22c55e; }
+  .dot-technology { background: #8b5cf6; }
+  .dot-caseforchange { background: #ec4899; }
+  .dot-all { background: var(--muted); }
+
   .view-toggle {
     display: flex;
     gap: 2px;
@@ -625,9 +716,13 @@
     </div>
     <div class="filter-group">
       <div class="filter-group-label">Theme</div>
-      <select class="filter-select" id="theme-filter">
-        <option value="all">All themes</option>
-      </select>
+      <div class="custom-dropdown" id="theme-dropdown">
+        <button class="custom-dropdown-trigger" id="theme-dropdown-trigger">
+          <span class="custom-dropdown-dot dot-all"></span>
+          <span id="theme-dropdown-label">All themes</span>
+        </button>
+        <div class="custom-dropdown-menu" id="theme-dropdown-menu"></div>
+      </div>
     </div>
     <div class="view-toggle" style="align-self:flex-end; margin-bottom:1px;">
       <button class="view-btn active" id="view-grid" title="Card view">
@@ -840,7 +935,7 @@ function parseCSV(text) {
 
 async function loadPosts() {
   try {
-    const resp = await fetch(SHEET_CSV);
+    const resp = await fetch(SHEET_CSV + "&t=" + Date.now());
     if (!resp.ok) throw new Error();
     const text = await resp.text();
     const rows = parseCSV(text);
@@ -865,16 +960,89 @@ async function loadPosts() {
   }
 }
 
+const GROUP_META = {
+  operations:    { label: "Operations",            dot: "dot-operations" },
+  supplier:      { label: "Supplier Relationships", dot: "dot-supplier" },
+  growing:       { label: "Growing Business",       dot: "dot-growing" },
+  technology:    { label: "Technology",             dot: "dot-technology" },
+  caseforchange: { label: "The Case for Change",    dot: "dot-caseforchange" }
+};
+
 function buildDropdowns() {
+  // Format — keep native select
   const formats = [...new Set(POSTS.map(p => p.format).filter(Boolean))].sort();
   const fSel = document.getElementById("format-filter");
   formats.forEach(f => { const o = document.createElement("option"); o.value = f; o.textContent = f; fSel.appendChild(o); });
   fSel.addEventListener("change", () => { currentFormat = fSel.value; renderPosts(); });
 
-  const themes = [...new Set(POSTS.map(p => p.theme).filter(Boolean))].sort();
-  const tSel = document.getElementById("theme-filter");
-  themes.forEach(t => { const o = document.createElement("option"); o.value = t; o.textContent = t; tSel.appendChild(o); });
-  tSel.addEventListener("change", () => { currentTheme = tSel.value; renderPosts(); });
+  // Theme — custom grouped dropdown
+  const themes = [...new Set(POSTS.map(p => p.theme).filter(Boolean))];
+  const menu = document.getElementById("theme-dropdown-menu");
+
+  // Group themes
+  const grouped = {};
+  const ungrouped = [];
+  themes.forEach(t => {
+    const g = THEME_GROUPS[t];
+    if (g) { if (!grouped[g]) grouped[g] = []; grouped[g].push(t); }
+    else ungrouped.push(t);
+  });
+
+  // Build menu HTML
+  let html = `<div class="custom-dropdown-item selected" data-value="all">
+    <span class="custom-dropdown-dot dot-all"></span> All themes
+  </div>`;
+
+  Object.entries(GROUP_META).forEach(([key, meta]) => {
+    if (!grouped[key]) return;
+    html += `<div class="custom-dropdown-group-label">${meta.label}</div>`;
+    grouped[key].sort().forEach(t => {
+      html += `<div class="custom-dropdown-item" data-value="${t}">
+        <span class="custom-dropdown-dot ${meta.dot}"></span>${t}
+      </div>`;
+    });
+  });
+
+  if (ungrouped.length) {
+    html += `<div class="custom-dropdown-group-label">Other</div>`;
+    ungrouped.sort().forEach(t => {
+      html += `<div class="custom-dropdown-item" data-value="${t}">
+        <span class="custom-dropdown-dot dot-all"></span>${t}
+      </div>`;
+    });
+  }
+
+  menu.innerHTML = html;
+
+  // Item click
+  menu.querySelectorAll(".custom-dropdown-item").forEach(item => {
+    item.addEventListener("click", () => {
+      const val = item.dataset.value;
+      currentTheme = val;
+      menu.querySelectorAll(".custom-dropdown-item").forEach(i => i.classList.remove("selected"));
+      item.classList.add("selected");
+
+      const dot = item.querySelector(".custom-dropdown-dot").className;
+      const label = val === "all" ? "All themes" : val;
+      document.getElementById("theme-dropdown-label").textContent = label;
+      document.querySelector("#theme-dropdown-trigger .custom-dropdown-dot").className = "custom-dropdown-dot " + dot.split(" ")[1];
+
+      document.getElementById("theme-dropdown").classList.remove("open");
+      renderPosts();
+    });
+  });
+
+  // Toggle open/close
+  document.getElementById("theme-dropdown-trigger").addEventListener("click", e => {
+    e.stopPropagation();
+    document.getElementById("theme-dropdown").classList.toggle("open");
+  });
+
+  document.addEventListener("click", () => {
+    document.getElementById("theme-dropdown").classList.remove("open");
+  });
+
+  menu.addEventListener("click", e => e.stopPropagation());
 }
 
 function getFiltered() {
