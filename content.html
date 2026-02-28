@@ -662,11 +662,38 @@
     padding: 24px 0;
   }
 
-  .posts-table .col-copy { max-width: 500px; white-space: pre-line; }
+  .posts-table .col-copy { max-width: 500px; }
   .posts-table .col-format { white-space: nowrap; width: 160px; }
   .posts-table .col-theme { width: 200px; }
   .posts-table .col-status { width: 100px; }
   .posts-table .col-action { width: 130px; white-space: nowrap; }
+
+  .table-copy-text {
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    line-height: 1.5;
+    white-space: normal;
+  }
+  .table-copy-text.expanded {
+    display: block;
+    -webkit-line-clamp: unset;
+    overflow: visible;
+    white-space: pre-line;
+  }
+  .table-expand-btn {
+    background: none;
+    border: none;
+    color: var(--navy);
+    font-size: 11px;
+    font-weight: 600;
+    cursor: pointer;
+    padding: 3px 0 0;
+    display: block;
+    font-family: inherit;
+  }
+  .table-expand-btn:hover { text-decoration: underline; }
 </style>
 </head>
 <body>
@@ -828,7 +855,7 @@ function themeTagClass(theme) {
 }
 
 const SHEET_CSV = "https://docs.google.com/spreadsheets/d/e/2PACX-1vSrEo6UtDrv1Exz4Km7JX76sy9EDHmSgvHZ2Cdbsc9A8va_IqEC6ySIN1f0ArQmNJKcgdy8meEFlOyY/pub?output=csv";
-const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyxSAX6N1tQDlG5GvI67oH2Qs8Kz1f5wqVorYT5v5nvBrEveGcJQ6aH3vsjp53GuoG8lg/exec";
+const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzlcIacVu3Nt3nIlpWJb4CbDkypqyIS3TVrtHud-hNtFYnSbwOxYSujzY5dDnw8MZXlqw/exec";
 
 let POSTS = [];
 let postedState = {};
@@ -849,6 +876,18 @@ function populateTeamDropdown(names, selectName) {
     sel.appendChild(o);
   });
   if (selectName) sel.value = selectName;
+}
+
+async function loadPostedState() {
+  try {
+    const resp = await fetch(APPS_SCRIPT_URL + "?action=getPosted&t=" + Date.now());
+    const data = await resp.json();
+    if (data.posted) {
+      postedState = data.posted;
+      updateStats();
+      renderPosts();
+    }
+  } catch(e) { /* fail silently, in-memory state still works */ }
 }
 
 async function loadTeam() {
@@ -955,8 +994,9 @@ async function loadPosts() {
     buildDropdowns();
     updateStats();
     renderPosts();
+    loadPostedState();
   } catch(e) {
-    document.getElementById("posts-grid").innerHTML = `<div class="empty-state"><h3>Could not load posts</h3><p>Check the Google Sheet is published to the web and try refreshing.</p></div>`;
+    document.getElementById("posts-grid").innerHTML = `<div class="empty-state"><h3>Could not load posts</h3><p>${e.message || "Check the sheet is published to the web and try refreshing."}</p></div>`;
   }
 }
 
@@ -1087,7 +1127,7 @@ function renderPosts() {
         return `<tr class="${isPosted ? "posted" : ""}">
           <td class="col-format"><span class="tag tag-format">${esc(post.format)}</span></td>
           <td class="col-theme"><span class="${themeTagClass(post.theme)}">${esc(post.theme)}</span></td>
-          <td class="col-copy">${esc(post.copy)}</td>
+          <td class="col-copy"><div class="table-copy-text" id="copy-${post.id}">${esc(post.copy)}</div><button class="table-expand-btn" onclick="toggleExpand('${post.id}')">Show more</button></td>
           <td class="col-status">${isPosted ? `<span style="font-size:12px;color:var(--posted-text);">&#10003; Posted</span>` : `<span style="font-size:12px;color:var(--muted);">Available</span>`}</td>
           <td class="col-action">
             ${isPosted
@@ -1154,6 +1194,19 @@ function confirmPost() {
     format: post.format,
     theme: post.theme
   };
+
+  // Persist to sheet
+  fetch(APPS_SCRIPT_URL, {
+    method: "POST",
+    body: JSON.stringify({
+      action: "markPosted",
+      postId: post.id,
+      postedBy: member,
+      postedAt: now.toISOString(),
+      format: post.format,
+      theme: post.theme
+    })
+  }).catch(() => {});  // fail silently
   window.open("https://www.linkedin.com/feed/?shareActive=true&text=" + encodeURIComponent(post.copy), "_blank");
   closeModal();
   updateStats();
@@ -1166,6 +1219,13 @@ function showToast(msg) {
   document.getElementById("toast-msg").textContent = msg;
   t.classList.add("show");
   setTimeout(() => t.classList.remove("show"), 3200);
+}
+
+function toggleExpand(id) {
+  const el = document.getElementById("copy-" + id);
+  const btn = el.nextElementSibling;
+  el.classList.toggle("expanded");
+  btn.textContent = el.classList.contains("expanded") ? "Show less" : "Show more";
 }
 
 function renderDashboard() {
