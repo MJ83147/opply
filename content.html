@@ -135,6 +135,67 @@
     padding: 24px 56px;
   }
 
+ .content-tabs {
+  display: flex;
+  gap: 4px;
+  margin-bottom: 24px;
+  background: var(--white);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 4px;
+  width: fit-content;
+}
+
+.content-tab {
+  padding: 9px 20px;
+  border-radius: 7px;
+  border: none;
+  background: none;
+  color: var(--muted);
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.15s;
+  font-family: inherit;
+  white-space: nowrap;
+}
+.content-tab:hover { color: var(--navy); }
+.content-tab.active { background: var(--navy); color: var(--white); }
+
+.content-tab-count {
+  display: inline-block;
+  font-size: 11px;
+  font-weight: 700;
+  background: rgba(255,255,255,0.2);
+  padding: 1px 6px;
+  border-radius: 10px;
+  margin-left: 6px;
+}
+.content-tab:not(.active) .content-tab-count {
+  background: var(--off-white);
+  color: var(--muted);
+}
+
+.my-posts-prompt {
+  grid-column: 1/-1;
+  text-align: center;
+  padding: 60px 20px;
+  color: var(--muted);
+}
+.my-posts-prompt h3 { font-size: 16px; color: var(--navy); margin-bottom: 6px; }
+.my-posts-prompt p { font-size: 13px; margin-bottom: 16px; }
+.my-posts-prompt button {
+  background: var(--navy);
+  color: var(--white);
+  border: none;
+  border-radius: 7px;
+  padding: 9px 18px;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  font-family: inherit;
+}
+.my-posts-prompt button:hover { background: var(--navy-hover); }
   .page-header { margin-bottom: 28px; }
   .page-title { font-size: 20px; font-weight: 700; color: var(--navy); letter-spacing: -0.3px; margin-bottom: 4px; }
   .page-subtitle { font-size: 13px; color: var(--muted); }
@@ -725,8 +786,11 @@
 
 <main>
   <div class="warning-bar" id="member-warning">Please <a href="#" id="warning-link" style="color:var(--pink);font-weight:600;">select or register your name</a> before posting.</div>
-
-  <div class="filter-row">
+<div class="content-tabs" id="content-tabs">
+  <button class="content-tab active" data-tab="public">Public Pool <span class="content-tab-count" id="tab-count-public"></span></button>
+  <button class="content-tab" data-tab="my">My Posts <span class="content-tab-count" id="tab-count-my"></span></button>
+</div>
+  <div class="filter-row" id="filter-row">
     <div class="filter-group">
       <div class="filter-group-label">Status</div>
       <div class="filter-pills" id="status-filters">
@@ -864,7 +928,7 @@ let currentFormat = "all";
 let currentTheme = "all";
 let currentView = "grid";
 let pendingPostId = null;
-
+let currentTab = "public";
 // Team dropdown
 const sel = document.getElementById("team-member");
 
@@ -949,6 +1013,12 @@ document.getElementById("btn-save-name").addEventListener("click", async () => {
 document.getElementById("name-input").addEventListener("keydown", e => {
   if (e.key === "Enter") document.getElementById("btn-save-name").click();
 });
+ 
+ sel.addEventListener("change", () => {
+  updateTabCounts();
+  updateStats();
+  if (currentTab === "my") renderPosts();
+});
 
 // CSV parser that handles quoted multiline fields
 function parseCSV(text) {
@@ -983,15 +1053,20 @@ async function loadPosts() {
     const iPost = headers.indexOf("post");
     const iTheme = headers.indexOf("theme");
     const iFormat = headers.indexOf("format");
+   const iAssigned = headers.indexOf("assigned to");
 
-    POSTS = rows.slice(1).filter(r => r[iId] && r[iId].trim()).map(r => ({
-      id: r[iId].trim(),
-      copy: (r[iPost] || "").trim(),
-      theme: (r[iTheme] || "").trim(),
-      format: (r[iFormat] || "").trim()
-    }));
+
+POSTS = rows.slice(1).filter(r => r[iId] && r[iId].trim()).map(r => ({
+  id: r[iId].trim(),
+  copy: (r[iPost] || "").trim(),
+  theme: (r[iTheme] || "").trim(),
+  format: (r[iFormat] || "").trim(),
+  assignedTo: (iAssigned >= 0 && r[iAssigned] ? r[iAssigned].trim() : "Public")
+}));
 
     buildDropdowns();
+   updateTabCounts();
+
     updateStats();
     renderPosts();
     loadPostedState();
@@ -1086,7 +1161,7 @@ function buildDropdowns() {
 }
 
 function getFiltered() {
-  return POSTS.filter(p => {
+  return getPostsForTab().filter(p => {
     const isPosted = !!postedState[p.id];
     if (currentStatus === "available" && isPosted) return false;
     if (currentStatus === "posted" && !isPosted) return false;
@@ -1097,15 +1172,22 @@ function getFiltered() {
 }
 
 function updateStats() {
-  const posted = Object.keys(postedState).length;
-  document.getElementById("stat-available").textContent = POSTS.length - posted;
+  const tabPosts = getPostsForTab();
+  const tabIds = new Set(tabPosts.map(p => p.id));
+  const posted = Object.keys(postedState).filter(id => tabIds.has(id)).length;
+  document.getElementById("stat-available").textContent = tabPosts.length - posted;
   document.getElementById("stat-posted").textContent = posted;
-  document.getElementById("stat-total").textContent = POSTS.length;
+  document.getElementById("stat-total").textContent = tabPosts.length;
 }
 
 function renderPosts() {
   const container = document.getElementById("posts-grid");
   const filtered = getFiltered();
+ if (currentTab === "my" && !sel.value) {
+  container.className = "posts-grid";
+  container.innerHTML = '<div class="my-posts-prompt"><h3>Select your name to see your posts</h3><p>Personal posts are matched to your name. Select who you are to view content written for you.</p><button onclick="document.getElementById(\'name-overlay\').style.display=\'flex\'">Select your name</button></div>';
+  return;
+}
   if (!filtered.length) {
     container.className = "posts-grid";
     container.innerHTML = `<div class="empty-state"><h3>No posts match</h3><p>Try adjusting the filters above.</p></div>`;
@@ -1228,6 +1310,22 @@ function toggleExpand(id) {
   btn.textContent = el.classList.contains("expanded") ? "Show less" : "Show more";
 }
 
+ function getPostsForTab() {
+  const member = sel.value;
+  if (currentTab === "my") {
+    return POSTS.filter(p => member && p.assignedTo.toLowerCase() === member.toLowerCase());
+  }
+  return POSTS.filter(p => p.assignedTo.toLowerCase() === "public");
+}
+
+
+ function updateTabCounts() {
+  const member = sel.value;
+  const publicCount = POSTS.filter(p => p.assignedTo.toLowerCase() === "public").length;
+  const myCount = member ? POSTS.filter(p => p.assignedTo.toLowerCase() === member.toLowerCase()).length : 0;
+  document.getElementById("tab-count-public").textContent = publicCount;
+  document.getElementById("tab-count-my").textContent = myCount;
+}
 function renderDashboard() {
   // Formats
   const formatCounts = {};
