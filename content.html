@@ -1389,6 +1389,8 @@ document.getElementById("nav-pool").addEventListener("click", () => {
   document.getElementById("nav-pool").classList.add("active");
   document.getElementById("nav-dash").classList.remove("active");
   document.getElementById("posts-grid").style.display = "";
+   document.getElementById("content-tabs").style.display = "";
+
   document.querySelector(".filter-row").style.display = "";
   document.querySelector(".warning-bar") && (document.querySelector(".warning-bar").style.display = "");
   document.getElementById("dashboard").style.display = "none";
@@ -1397,6 +1399,8 @@ document.getElementById("nav-pool").addEventListener("click", () => {
 document.getElementById("nav-dash").addEventListener("click", () => {
   document.getElementById("nav-dash").classList.add("active");
   document.getElementById("nav-pool").classList.remove("active");
+   document.getElementById("content-tabs").style.display = "none";
+
   document.getElementById("posts-grid").style.display = "none";
   document.querySelector(".filter-row").style.display = "none";
   document.getElementById("dashboard").style.display = "block";
