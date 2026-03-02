@@ -1188,9 +1188,13 @@ function renderPosts() {
   container.innerHTML = '<div class="my-posts-prompt"><h3>Select your name to see your posts</h3><p>Personal posts are matched to your name. Select who you are to view content written for you.</p><button onclick="document.getElementById(\'name-overlay\').style.display=\'flex\'">Select your name</button></div>';
   return;
 }
-  if (!filtered.length) {
+if (!filtered.length) {
     container.className = "posts-grid";
-    container.innerHTML = `<div class="empty-state"><h3>No posts match</h3><p>Try adjusting the filters above.</p></div>`;
+    if (currentTab === "my") {
+      container.innerHTML = '<div class="empty-state"><h3>No personal posts yet</h3><p>Posts assigned to you will appear here.</p></div>';
+    } else {
+      container.innerHTML = '<div class="empty-state"><h3>No posts match</h3><p>Try adjusting the filters above.</p></div>';
+    }
     return;
   }
   if (currentView === "list") {
@@ -1369,6 +1373,16 @@ function renderBarChart(containerId, counts, isAccent) {
     </div>
   `).join("");
 }
+// Content tab switching
+document.getElementById("content-tabs").querySelectorAll(".content-tab").forEach(tab => {
+  tab.addEventListener("click", () => {
+    document.getElementById("content-tabs").querySelectorAll(".content-tab").forEach(t => t.classList.remove("active"));
+    tab.classList.add("active");
+    currentTab = tab.dataset.tab;
+    updateStats();
+    renderPosts();
+  });
+});
 
 // Nav switching
 document.getElementById("nav-pool").addEventListener("click", () => {
