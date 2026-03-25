@@ -1,0 +1,980 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Free Ops Review | Opply</title>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800;900&family=Fira+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --purple-start: #7A34FF;
+    --purple-end: #41218F;
+    --purple-mid: #5C2BC4;
+    --purple-deep: #2E1670;
+    --navy: #14144D;
+    --teal: #3DD9C9;
+    --teal-hover: #50E8D8;
+    --teal-muted: rgba(61,217,201,0.15);
+    --teal-bg: #f0faf9;
+    --gold: #F4B804;
+    --gold-muted: rgba(244,184,4,0.12);
+    --dark: #1A1A2E;
+    --grey: #6B7280;
+    --grey-light: #9CA3AF;
+    --border: #E5E7EB;
+    --off-white: #F7F8FA;
+    --white: #FFFFFF;
+    --radius: 20px;
+    --radius-sm: 14px;
+    --radius-xs: 8px;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'Fira Sans', sans-serif;
+    color: var(--dark);
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+    background: var(--white);
+    overflow-x: hidden;
+  }
+
+  /* ===== NAV ===== */
+  .nav {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 100;
+    padding: 20px 0;
+  }
+  .nav-inner {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 40px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .nav-logo {
+    font-family: 'Poppins', sans-serif;
+    font-weight: 900;
+    font-size: 32px;
+    color: var(--white);
+    letter-spacing: -0.5px;
+    text-decoration: none;
+  }
+  .nav-right {
+    display: flex;
+    align-items: center;
+    gap: 32px;
+  }
+  .nav-link {
+    font-size: 14px;
+    font-weight: 500;
+    color: rgba(255,255,255,0.7);
+    text-decoration: none;
+    transition: color 0.2s;
+  }
+  .nav-link:hover { color: var(--white); }
+  .nav-cta {
+    font-family: 'Fira Sans', sans-serif;
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--navy);
+    background: var(--teal);
+    padding: 10px 24px;
+    border-radius: 100px;
+    text-decoration: none;
+    transition: background 0.2s;
+  }
+  .nav-cta:hover { background: var(--teal-hover); }
+
+  /* ===== HERO ===== */
+  .hero {
+    background: linear-gradient(135deg, var(--purple-start) 0%, var(--purple-end) 60%, var(--purple-deep) 100%);
+    padding: 140px 40px 80px;
+    position: relative;
+    overflow: hidden;
+    min-height: 600px;
+  }
+
+  /* Swooping curves */
+  .hero-curve-teal {
+    position: absolute;
+    top: -60px;
+    right: -120px;
+    width: 700px;
+    height: 700px;
+    pointer-events: none;
+    z-index: 1;
+  }
+  .hero-curve-gold {
+    position: absolute;
+    bottom: -160px;
+    left: -100px;
+    width: 500px;
+    height: 500px;
+    pointer-events: none;
+    z-index: 1;
+  }
+  .hero-curve-purple {
+    position: absolute;
+    top: 40px;
+    right: 100px;
+    width: 600px;
+    height: 600px;
+    pointer-events: none;
+    z-index: 1;
+    opacity: 0.3;
+  }
+
+  .hero-inner {
+    max-width: 1200px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: 1fr 420px;
+    gap: 60px;
+    align-items: start;
+    position: relative;
+    z-index: 10;
+  }
+  .hero-content { padding-top: 16px; }
+  .hero-badge {
+    display: inline-block;
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--teal);
+    text-transform: uppercase;
+    letter-spacing: 1.8px;
+    margin-bottom: 24px;
+    padding: 7px 16px;
+    border: 1px solid rgba(61,217,201,0.25);
+    border-radius: 100px;
+    backdrop-filter: blur(4px);
+    background: rgba(61,217,201,0.06);
+  }
+  .hero h1 {
+    font-family: 'Poppins', sans-serif;
+    font-weight: 800;
+    font-size: 42px;
+    color: var(--white);
+    line-height: 1.15;
+    margin-bottom: 20px;
+    letter-spacing: -0.5px;
+  }
+  .hero h1 .accent { color: var(--teal); }
+  .hero-sub {
+    font-size: 17px;
+    color: rgba(255,255,255,0.65);
+    line-height: 1.7;
+    margin-bottom: 36px;
+    max-width: 480px;
+  }
+  .hero-checks { list-style: none; display: flex; flex-direction: column; gap: 14px; }
+  .hero-checks li {
+    font-size: 14px;
+    color: rgba(255,255,255,0.8);
+    display: flex;
+    align-items: center;
+    gap: 14px;
+  }
+  .check-dot {
+    width: 24px;
+    height: 24px;
+    background: rgba(61,217,201,0.12);
+    border-radius: 50%;
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .check-dot svg { width: 12px; height: 12px; }
+
+  /* ===== FORM CARD ===== */
+  .form-card {
+    background: var(--white);
+    border-radius: var(--radius);
+    padding: 36px 30px;
+    box-shadow: 0 24px 80px rgba(0,0,0,0.25), 0 4px 20px rgba(0,0,0,0.1);
+    position: relative;
+    z-index: 20;
+  }
+  .form-card-title {
+    font-family: 'Poppins', sans-serif;
+    font-weight: 700;
+    font-size: 20px;
+    color: var(--navy);
+    margin-bottom: 4px;
+  }
+  .form-card-sub {
+    font-size: 13px;
+    color: var(--grey);
+    margin-bottom: 26px;
+  }
+  .visual-form { display: flex; flex-direction: column; gap: 14px; }
+  .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+  .field { display: flex; flex-direction: column; gap: 5px; }
+  .field label {
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--navy);
+  }
+  .field input, .field select {
+    font-family: 'Fira Sans', sans-serif;
+    font-size: 14px;
+    padding: 12px 14px;
+    border: 1.5px solid var(--border);
+    border-radius: var(--radius-xs);
+    background: var(--white);
+    color: var(--dark);
+    transition: border-color 0.2s, box-shadow 0.2s;
+    width: 100%;
+  }
+  .field select {
+    appearance: none;
+    -webkit-appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg width='12' height='8' viewBox='0 0 12 8' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M1 1.5L6 6.5L11 1.5' stroke='%236B7280' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 14px center;
+    padding-right: 36px;
+    cursor: pointer;
+  }
+  .field input:focus, .field select:focus {
+    outline: none;
+    border-color: var(--teal);
+    box-shadow: 0 0 0 3px rgba(61,217,201,0.12);
+  }
+  .btn-submit {
+    font-family: 'Fira Sans', sans-serif;
+    font-weight: 600;
+    font-size: 15px;
+    background: var(--teal);
+    color: var(--navy);
+    border: none;
+    padding: 14px 24px;
+    border-radius: 100px;
+    cursor: pointer;
+    transition: background 0.2s;
+    width: 100%;
+    margin-top: 6px;
+  }
+  .btn-submit:hover { background: var(--teal-hover); }
+  .form-fine {
+    font-size: 11px;
+    color: var(--grey-light);
+    text-align: center;
+    margin-top: 4px;
+  }
+
+  /* ===== LOGOS ===== */
+  .logos {
+    padding: 40px 40px;
+    border-bottom: 1px solid var(--border);
+    background: var(--white);
+  }
+  .logos-inner { max-width: 1200px; margin: 0 auto; text-align: center; }
+  .logos-label {
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--grey-light);
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    margin-bottom: 22px;
+  }
+  .logos-row {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 40px;
+    flex-wrap: wrap;
+  }
+  .logo-item {
+    font-family: 'Poppins', sans-serif;
+    font-weight: 700;
+    font-size: 15px;
+    color: var(--navy);
+    opacity: 0.2;
+    white-space: nowrap;
+  }
+
+  /* ===== SECTION SHARED ===== */
+  .section-tag {
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--purple-start);
+    text-transform: uppercase;
+    letter-spacing: 1.8px;
+    margin-bottom: 14px;
+  }
+
+  /* ===== PROBLEM ===== */
+  .problem { padding: 88px 40px; background: var(--white); }
+  .problem-inner { max-width: 1000px; margin: 0 auto; }
+  .problem h2 {
+    font-family: 'Poppins', sans-serif;
+    font-weight: 700;
+    font-size: 32px;
+    color: var(--navy);
+    line-height: 1.25;
+    margin-bottom: 16px;
+    max-width: 600px;
+  }
+  .problem-lead {
+    font-size: 16px;
+    color: var(--grey);
+    line-height: 1.7;
+    max-width: 560px;
+    margin-bottom: 44px;
+  }
+  .pain-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+  .pain-card {
+    background: var(--off-white);
+    border-radius: var(--radius-sm);
+    padding: 28px 24px;
+    border: 1px solid var(--border);
+    transition: box-shadow 0.2s;
+  }
+  .pain-card:hover { box-shadow: 0 4px 16px rgba(0,0,0,0.05); }
+  .pain-card h3 {
+    font-family: 'Poppins', sans-serif;
+    font-weight: 600;
+    font-size: 15px;
+    color: var(--navy);
+    margin-bottom: 8px;
+  }
+  .pain-card p { font-size: 13.5px; color: var(--grey); line-height: 1.6; }
+
+  /* ===== SOLUTION ===== */
+  .solution {
+    padding: 88px 40px;
+    background: var(--off-white);
+  }
+  .solution-inner { max-width: 1200px; margin: 0 auto; }
+  .solution h2 {
+    font-family: 'Poppins', sans-serif;
+    font-weight: 700;
+    font-size: 32px;
+    color: var(--navy);
+    line-height: 1.25;
+    margin-bottom: 10px;
+  }
+  .solution-sub {
+    font-size: 16px;
+    color: var(--grey);
+    margin-bottom: 48px;
+    max-width: 560px;
+  }
+  .sol-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 20px; }
+  .sol-card {
+    background: var(--white);
+    border-radius: var(--radius-sm);
+    padding: 32px 26px;
+    border: 1px solid var(--border);
+    transition: box-shadow 0.2s;
+  }
+  .sol-card:hover { box-shadow: 0 6px 20px rgba(0,0,0,0.06); }
+  .sol-icon {
+    width: 46px;
+    height: 46px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 20px;
+    margin-bottom: 18px;
+  }
+  .sol-icon.ic-purple { background: rgba(122,52,255,0.08); color: var(--purple-start); }
+  .sol-icon.ic-teal { background: var(--teal-muted); color: var(--teal); }
+  .sol-icon.ic-gold { background: var(--gold-muted); color: var(--gold); }
+  .sol-card h3 {
+    font-family: 'Poppins', sans-serif;
+    font-weight: 600;
+    font-size: 16px;
+    color: var(--navy);
+    margin-bottom: 8px;
+  }
+  .sol-card p { font-size: 13.5px; color: var(--grey); line-height: 1.6; }
+
+  /* ===== PROOF ===== */
+  .proof {
+    padding: 76px 40px;
+    background: linear-gradient(135deg, var(--purple-start) 0%, var(--purple-end) 70%, var(--purple-deep) 100%);
+    position: relative;
+    overflow: hidden;
+  }
+  .proof::before {
+    content: '';
+    position: absolute;
+    top: -80px;
+    left: -60px;
+    width: 300px;
+    height: 300px;
+    background: radial-gradient(circle, rgba(61,217,201,0.1) 0%, transparent 70%);
+    border-radius: 50%;
+  }
+  .proof-inner { max-width: 1000px; margin: 0 auto; text-align: center; position: relative; z-index: 2; }
+  .proof-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 32px;
+    margin-bottom: 48px;
+  }
+  .proof-stat { text-align: center; }
+  .proof-num {
+    font-family: 'Poppins', sans-serif;
+    font-weight: 800;
+    font-size: 42px;
+    line-height: 1;
+    margin-bottom: 10px;
+  }
+  .proof-num.c-teal { color: var(--teal); }
+  .proof-num.c-gold { color: var(--gold); }
+  .proof-num.c-white { color: var(--white); }
+  .proof-desc {
+    font-size: 13px;
+    color: rgba(255,255,255,0.5);
+    line-height: 1.5;
+  }
+  .proof-backed {
+    border-top: 1px solid rgba(255,255,255,0.08);
+    padding-top: 32px;
+  }
+  .proof-backed-label {
+    font-size: 10px;
+    font-weight: 600;
+    color: rgba(255,255,255,0.3);
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    margin-bottom: 18px;
+  }
+  .investor-row {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 40px;
+    flex-wrap: wrap;
+  }
+  .investor-name {
+    font-family: 'Poppins', sans-serif;
+    font-weight: 600;
+    font-size: 13px;
+    color: rgba(255,255,255,0.22);
+    white-space: nowrap;
+  }
+
+  /* ===== EXPECT ===== */
+  .expect { padding: 88px 40px; background: var(--white); }
+  .expect-inner { max-width: 1000px; margin: 0 auto; }
+  .expect h2 {
+    font-family: 'Poppins', sans-serif;
+    font-weight: 700;
+    font-size: 32px;
+    color: var(--navy);
+    margin-bottom: 10px;
+  }
+  .expect-sub {
+    font-size: 16px;
+    color: var(--grey);
+    margin-bottom: 48px;
+    max-width: 520px;
+  }
+  .steps-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 32px;
+    margin-bottom: 48px;
+  }
+  .step-num {
+    font-family: 'Poppins', sans-serif;
+    font-weight: 800;
+    font-size: 48px;
+    color: var(--border);
+    line-height: 1;
+    margin-bottom: 16px;
+  }
+  .step-card h3 {
+    font-family: 'Poppins', sans-serif;
+    font-weight: 600;
+    font-size: 16px;
+    color: var(--navy);
+    margin-bottom: 8px;
+  }
+  .step-card p { font-size: 14px; color: var(--grey); line-height: 1.6; }
+  .expect-reassurance {
+    background: rgba(122,52,255,0.04);
+    border: 1px solid rgba(122,52,255,0.1);
+    border-radius: var(--radius-sm);
+    padding: 24px 26px;
+    display: flex;
+    align-items: flex-start;
+    gap: 16px;
+  }
+  .reassure-icon {
+    width: 36px;
+    height: 36px;
+    background: var(--purple-start);
+    border-radius: 50%;
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .reassure-icon svg { width: 16px; height: 16px; }
+  .reassure-text { font-size: 14px; color: var(--navy); line-height: 1.6; }
+  .reassure-text strong {
+    display: block;
+    font-family: 'Poppins', sans-serif;
+    font-weight: 600;
+    font-size: 14px;
+    margin-bottom: 3px;
+  }
+
+  /* ===== TESTIMONIAL ===== */
+  .testimonial {
+    padding: 76px 40px;
+    background: linear-gradient(135deg, var(--purple-start) 0%, var(--purple-end) 100%);
+    position: relative;
+    overflow: hidden;
+  }
+  .testimonial::after {
+    content: '';
+    position: absolute;
+    bottom: -40px;
+    right: -60px;
+    width: 240px;
+    height: 240px;
+    background: radial-gradient(circle, rgba(244,184,4,0.08) 0%, transparent 70%);
+    border-radius: 50%;
+  }
+  .testimonial-inner {
+    max-width: 720px;
+    margin: 0 auto;
+    text-align: center;
+    position: relative;
+    z-index: 2;
+  }
+  .testimonial-quote {
+    font-family: 'Poppins', sans-serif;
+    font-weight: 500;
+    font-size: 21px;
+    color: var(--white);
+    line-height: 1.65;
+    font-style: italic;
+    margin-bottom: 28px;
+  }
+  .testimonial-attr {
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--white);
+  }
+  .testimonial-role {
+    font-size: 13px;
+    color: rgba(255,255,255,0.5);
+    margin-top: 2px;
+  }
+
+  /* ===== BOTTOM CTA ===== */
+  .bottom-cta {
+    padding: 88px 40px;
+    text-align: center;
+    background: var(--white);
+  }
+  .bottom-cta-inner { max-width: 540px; margin: 0 auto; }
+  .bottom-cta h2 {
+    font-family: 'Poppins', sans-serif;
+    font-weight: 700;
+    font-size: 30px;
+    color: var(--navy);
+    line-height: 1.25;
+    margin-bottom: 14px;
+  }
+  .bottom-cta p {
+    font-size: 16px;
+    color: var(--grey);
+    margin-bottom: 32px;
+    line-height: 1.6;
+  }
+  .btn-cta {
+    display: inline-block;
+    font-family: 'Fira Sans', sans-serif;
+    font-weight: 600;
+    font-size: 16px;
+    background: var(--teal);
+    color: var(--navy);
+    padding: 16px 44px;
+    border-radius: 100px;
+    text-decoration: none;
+    cursor: pointer;
+    transition: background 0.2s;
+    border: none;
+  }
+  .btn-cta:hover { background: var(--teal-hover); }
+
+  /* ===== FOOTER ===== */
+  .footer { padding: 28px 40px; border-top: 1px solid var(--border); background: var(--white); }
+  .footer-inner {
+    max-width: 1200px;
+    margin: 0 auto;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .footer-brand {
+    font-family: 'Poppins', sans-serif;
+    font-weight: 800;
+    font-size: 20px;
+    color: var(--navy);
+    text-decoration: none;
+  }
+  .footer-links { display: flex; gap: 24px; }
+  .footer-links a { font-size: 13px; color: var(--grey); text-decoration: none; }
+  .footer-links a:hover { color: var(--navy); }
+  .footer-copy { font-size: 11px; color: var(--grey-light); }
+
+  /* ===== FLOATING UI FRAGMENTS (hero decoration) ===== */
+  .ui-fragment {
+    position: absolute;
+    background: var(--white);
+    border-radius: 12px;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.15);
+    padding: 14px 18px;
+    z-index: 5;
+    font-size: 12px;
+    color: var(--navy);
+    font-weight: 500;
+    pointer-events: none;
+  }
+  .ui-frag-1 {
+    top: 120px;
+    right: 480px;
+    animation: float-up 6s ease-in-out infinite;
+  }
+  .ui-frag-2 {
+    bottom: 60px;
+    right: 500px;
+    animation: float-up 5s ease-in-out infinite 1s;
+  }
+  .ui-frag-3 {
+    top: 180px;
+    right: 20px;
+    animation: float-up 7s ease-in-out infinite 0.5s;
+  }
+  .frag-label {
+    font-size: 9px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: var(--grey-light);
+    margin-bottom: 6px;
+    font-weight: 600;
+  }
+  .frag-value {
+    font-family: 'Poppins', sans-serif;
+    font-weight: 700;
+    font-size: 16px;
+    color: var(--navy);
+  }
+  .frag-status {
+    display: inline-block;
+    font-size: 10px;
+    font-weight: 600;
+    padding: 3px 10px;
+    border-radius: 100px;
+    margin-top: 6px;
+  }
+  .frag-status.delivered {
+    background: rgba(61,217,201,0.12);
+    color: #1a9e93;
+  }
+
+  @keyframes float-up {
+    0%, 100% { transform: translateY(0px); }
+    50% { transform: translateY(-12px); }
+  }
+
+  /* ===== RESPONSIVE ===== */
+  @media (max-width: 960px) {
+    .hero-inner { grid-template-columns: 1fr; gap: 40px; }
+    .hero { padding: 120px 24px 60px; min-height: auto; }
+    .hero h1 { font-size: 32px; }
+    .ui-fragment { display: none; }
+    .hero-curve-teal, .hero-curve-gold, .hero-curve-purple { display: none; }
+    .pain-grid, .sol-grid, .steps-row { grid-template-columns: 1fr; }
+    .proof-grid { grid-template-columns: 1fr 1fr; gap: 24px; }
+    .form-row { grid-template-columns: 1fr; }
+    .footer-inner { flex-direction: column; gap: 12px; text-align: center; }
+    .nav-link { display: none; }
+    .section-tag, .problem, .solution, .expect, .bottom-cta, .logos { padding-left: 24px; padding-right: 24px; }
+  }
+
+  @media (max-width: 600px) {
+    .proof-grid { grid-template-columns: 1fr 1fr; }
+    .investor-row { gap: 20px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav class="nav">
+  <div class="nav-inner">
+    <a class="nav-logo" href="https://opply.com">Opply</a>
+    <div class="nav-right">
+      <a class="nav-link" href="https://opply.com/case-studies/">Case Studies</a>
+      <a class="nav-link" href="https://opply.com/about/">About</a>
+      <a class="nav-cta" href="https://opply.com">Sign Up</a>
+    </div>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero" id="top">
+
+  <!-- Decorative curves -->
+  <svg class="hero-curve-teal" viewBox="0 0 700 700" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <path d="M650 50C500 50 450 200 350 300C250 400 100 350 50 500C0 650 150 700 300 650" stroke="rgba(61,217,201,0.25)" stroke-width="3" fill="none"/>
+    <path d="M700 100C550 120 480 250 380 340C280 430 150 400 80 520C10 640 180 720 330 680" stroke="rgba(61,217,201,0.1)" stroke-width="2" fill="none"/>
+  </svg>
+  <svg class="hero-curve-gold" viewBox="0 0 500 500" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <path d="M50 400C100 300 200 350 300 250C400 150 350 50 450 20" stroke="rgba(244,184,4,0.2)" stroke-width="3" fill="none"/>
+  </svg>
+  <svg class="hero-curve-purple" viewBox="0 0 600 600" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <path d="M500 50C400 100 350 250 250 300C150 350 50 250 20 400C-10 550 200 600 350 500" stroke="rgba(255,255,255,0.08)" stroke-width="2.5" fill="none"/>
+  </svg>
+
+  <!-- Floating UI fragments -->
+  <div class="ui-fragment ui-frag-1">
+    <div class="frag-label">Granulated Sugar</div>
+    <div style="display:flex; align-items:center; gap:12px;">
+      <span class="frag-value">1,000kg</span>
+      <span class="frag-status delivered">Delivered</span>
+    </div>
+  </div>
+  <div class="ui-fragment ui-frag-2">
+    <div class="frag-label">Cocoa Powder</div>
+    <div style="display:flex; align-items:center; gap:12px;">
+      <span style="font-family:'Poppins',sans-serif; font-weight:600; font-size:14px; color:#1a9e93;">-12%</span>
+      <span style="font-size:11px; color:var(--grey);">vs. last quote</span>
+    </div>
+  </div>
+  <div class="ui-fragment ui-frag-3">
+    <div class="frag-label">OTIF This Month</div>
+    <div class="frag-value">98%</div>
+  </div>
+
+  <div class="hero-inner">
+    <div class="hero-content">
+      <div class="hero-badge">Free for F&B brands</div>
+      <h1>Get a free ops review from <span class="accent">F&B supply chain specialists</span></h1>
+      <p class="hero-sub">Our team will assess your current sourcing, fulfilment, and financing setup and show you exactly where you're losing time and margin.</p>
+      <ul class="hero-checks">
+        <li><span class="check-dot"><svg viewBox="0 0 12 10" fill="none"><path d="M1 5L4.5 8.5L11 1.5" stroke="#3DD9C9" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></span>Meet an F&B ops specialist who knows your world</li>
+        <li><span class="check-dot"><svg viewBox="0 0 12 10" fill="none"><path d="M1 5L4.5 8.5L11 1.5" stroke="#3DD9C9" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></span>Get a clear view of where your supply chain can improve</li>
+        <li><span class="check-dot"><svg viewBox="0 0 12 10" fill="none"><path d="M1 5L4.5 8.5L11 1.5" stroke="#3DD9C9" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></span>Walk away with actionable next steps for your ops</li>
+      </ul>
+    </div>
+
+    <!-- FORM -->
+    <div class="form-card">
+      <div class="form-card-title">Book your free ops review</div>
+      <div class="form-card-sub">Takes 30 seconds. We'll be in touch within one working day.</div>
+
+      <!-- PRODUCTION NOTE: Replace this form with your HubSpot embed -->
+      <form class="visual-form" onsubmit="return false;">
+        <div class="form-row">
+          <div class="field"><label>First name</label><input type="text" placeholder="Jane"></div>
+          <div class="field"><label>Last name</label><input type="text" placeholder="Smith"></div>
+        </div>
+        <div class="field"><label>Work email</label><input type="email" placeholder="jane@yourbrand.com"></div>
+        <div class="field"><label>Company name</label><input type="text" placeholder="Your F&B brand"></div>
+        <div class="field">
+          <label>Annual revenue</label>
+          <select>
+            <option value="" disabled selected>Select range</option>
+            <option>Under £500k</option>
+            <option>£500k - £1M</option>
+            <option>£1M - £2M</option>
+            <option>£2M - £5M</option>
+            <option>£5M - £10M</option>
+            <option>£10M+</option>
+          </select>
+        </div>
+        <button type="submit" class="btn-submit">Book my free ops review</button>
+        <div class="form-fine">No spam. Your data stays private.</div>
+      </form>
+    </div>
+  </div>
+</section>
+
+<!-- LOGOS -->
+<section class="logos">
+  <div class="logos-inner">
+    <div class="logos-label">Trusted by 200+ growing F&B brands</div>
+    <div class="logos-row">
+      <span class="logo-item">Dirtea</span>
+      <span class="logo-item">Punchy</span>
+      <span class="logo-item">Momo</span>
+      <span class="logo-item">Agua de Madre</span>
+      <span class="logo-item">Pass the Honey</span>
+      <span class="logo-item">Biomel</span>
+      <span class="logo-item">Whims</span>
+      <span class="logo-item">Jukes</span>
+      <span class="logo-item">Unrooted</span>
+    </div>
+  </div>
+</section>
+
+<!-- PROBLEM -->
+<section class="problem">
+  <div class="problem-inner">
+    <div class="section-tag">The reality</div>
+    <h2>Ops shouldn't be the thing that slows you down</h2>
+    <p class="problem-lead">The supply chain work that was manageable at launch gets heavier as you grow. Here's where we see brands losing the most time and money.</p>
+    <div class="pain-grid">
+      <div class="pain-card">
+        <h3>Deliveries you can't rely on</h3>
+        <p>When your on time, in full rate hovers around 60%, every week is a gamble. Late ingredients mean missed production run deadlines, and retailers don't wait around.</p>
+      </div>
+      <div class="pain-card">
+        <h3>Everything lives in spreadsheets</h3>
+        <p>Ingredients, suppliers, POs, delivery dates. It works until it doesn't, and by then you've already missed a restock window.</p>
+      </div>
+      <div class="pain-card">
+        <h3>Cash tied up in ingredients</h3>
+        <p>You're paying suppliers before your customers have paid you. That gap gets wider as you scale, and it limits what you can say yes to.</p>
+      </div>
+      <div class="pain-card">
+        <h3>Your week disappears into admin</h3>
+        <p>Chasing supplier confirmations, reconciling invoices, placing reorders. The work that keeps the lights on is the same work keeping you from growing.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SOLUTION -->
+<section class="solution">
+  <div class="solution-inner">
+    <div class="section-tag">How Opply works</div>
+    <h2>Automated operations for food and beverage brands</h2>
+    <p class="solution-sub">Opply's AI agents and F&B operations team manage your entire supply chain. Sourcing, ordering, delivery, financing. All handled.</p>
+    <div class="sol-grid">
+      <div class="sol-card">
+        <div class="sol-icon ic-purple">&#9878;</div>
+        <h3>Order management and delivery</h3>
+        <p>Opply places orders, tracks deliveries, and coordinates logistics. 98% on time, in full delivery versus the 60% industry average.</p>
+      </div>
+      <div class="sol-card">
+        <div class="sol-icon ic-teal">&#9733;</div>
+        <h3>Sourcing and procurement</h3>
+        <p>Access top tier suppliers that small brands can't normally reach. Opply aggregates demand across brands to unlock better pricing without bulk orders.</p>
+      </div>
+      <div class="sol-card">
+        <div class="sol-icon ic-gold">&#9201;</div>
+        <h3>Financing and payments</h3>
+        <p>Get 60 to 90 day payment terms and one consolidated monthly invoice. Pay for ingredients after you've sold the product.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PROOF -->
+<section class="proof">
+  <div class="proof-inner">
+    <div class="proof-grid">
+      <div class="proof-stat">
+        <div class="proof-num c-teal">98%</div>
+        <div class="proof-desc">On time, in full<br>delivery rate</div>
+      </div>
+      <div class="proof-stat">
+        <div class="proof-num c-gold">30%</div>
+        <div class="proof-desc">Average savings on<br>cost of goods</div>
+      </div>
+      <div class="proof-stat">
+        <div class="proof-num c-white">90 days</div>
+        <div class="proof-desc">Payment terms<br>to free up cash flow</div>
+      </div>
+      <div class="proof-stat">
+        <div class="proof-num c-teal">90%</div>
+        <div class="proof-desc">Forecast accuracy<br>up from 30% average</div>
+      </div>
+    </div>
+    <div class="proof-backed">
+      <div class="proof-backed-label">Backed by leading investors</div>
+      <div class="investor-row">
+        <span class="investor-name">Index Ventures</span>
+        <span class="investor-name">Entrepreneur First</span>
+        <span class="investor-name">Chalfen Ventures</span>
+        <span class="investor-name">JamJar Investments</span>
+        <span class="investor-name">Foxe Capital</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- WHAT TO EXPECT -->
+<section class="expect">
+  <div class="expect-inner">
+    <div class="section-tag">What to expect</div>
+    <h2>What happens on the call</h2>
+    <p class="expect-sub">A focused conversation with an F&B ops specialist about your supply chain and where it could work harder for you.</p>
+    <div class="steps-row">
+      <div class="step-card">
+        <div class="step-num">01</div>
+        <h3>We learn your setup</h3>
+        <p>Your existing suppliers, how many ingredients you work with, how you place orders, and where the biggest pain points sit today.</p>
+      </div>
+      <div class="step-card">
+        <div class="step-num">02</div>
+        <h3>We spot the gaps</h3>
+        <p>Our team identifies where you're losing time and money based on patterns we've seen across hundreds of F&B brands.</p>
+      </div>
+      <div class="step-card">
+        <div class="step-num">03</div>
+        <h3>You get a tailored proposal</h3>
+        <p>We show you how many hours we could save, which products fit your pain points, and a walkthrough of how each one works.</p>
+      </div>
+    </div>
+    <div class="expect-reassurance">
+      <div class="reassure-icon"><svg viewBox="0 0 16 16" fill="none"><path d="M8 1L10.1 5.3L15 6L11.5 9.4L12.2 14.3L8 12.1L3.8 14.3L4.5 9.4L1 6L5.9 5.3L8 1Z" fill="white"/></svg></div>
+      <div class="reassure-text">
+        <strong>You'll be speaking with people who've run F&B supply chains themselves</strong>
+        Every member of Opply's client team has real experience running food and beverage supply chains. They speak your language because they've done your job.
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- TESTIMONIAL -->
+<section class="testimonial">
+  <div class="testimonial-inner">
+    <p class="testimonial-quote">"We've really enjoyed using Opply. The service of being able to scan the market for available ingredients is not one that we have encountered anywhere else. It's great for new product development, plus getting more competitive rates on existing supplies. We would never have discovered these suppliers without Opply."</p>
+    <div class="testimonial-attr">Tom Smart</div>
+    <div class="testimonial-role">Co-Founder, Against the Current</div>
+  </div>
+</section>
+
+<!-- BOTTOM CTA -->
+<section class="bottom-cta">
+  <div class="bottom-cta-inner">
+    <h2>One call could change how you run your supply chain</h2>
+    <p>Book a free ops review with our F&B specialists. A focused look at your operations and where they could work better.</p>
+    <button class="btn-cta" onclick="document.getElementById('top').scrollIntoView({behavior:'smooth'})">Book my free ops review</button>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer class="footer">
+  <div class="footer-inner">
+    <a class="footer-brand" href="https://opply.com">Opply</a>
+    <div class="footer-links">
+      <a href="https://opply.com/case-studies/">Case Studies</a>
+      <a href="https://opply.com/sourcing/">Sourcing</a>
+      <a href="https://opply.com/about/">About</a>
+    </div>
+    <div class="footer-copy">Opply Ltd &middot; London &middot; Chicago</div>
+  </div>
+</footer>
+
+</body>
+</html>
