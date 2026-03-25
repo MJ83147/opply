@@ -1,0 +1,742 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Opply ROI Calculator - Results Preview</title>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&family=Fira+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --purple-start: #7A34FF;
+    --purple-end: #41218F;
+    --navy: #14144D;
+    --teal: #3DD9C9;
+    --teal-soft: rgba(61,217,201,0.12);
+    --dark: #232A30;
+    --grey: #6B7280;
+    --light-grey: #E5E7EB;
+    --off-white: #F7F7FA;
+    --white: #FFFFFF;
+    --shadow-md: 0 4px 16px rgba(20,20,77,0.06);
+    --shadow-lg: 0 12px 32px rgba(20,20,77,0.08);
+    --radius: 20px;
+    --radius-md: 16px;
+    --radius-sm: 12px;
+    --radius-xs: 8px;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'Fira Sans', sans-serif;
+    background: var(--white);
+    color: var(--dark);
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  .dev-badge {
+    position: fixed;
+    top: 16px;
+    right: 16px;
+    background: var(--navy);
+    color: var(--teal);
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    padding: 6px 14px;
+    border-radius: var(--radius-xs);
+    z-index: 200;
+    box-shadow: var(--shadow-lg);
+  }
+
+  .nav {
+    background: var(--navy);
+    padding: 14px 0;
+  }
+  .nav-inner {
+    max-width: 1120px;
+    margin: 0 auto;
+    padding: 0 32px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .nav-logo {
+    font-family: 'Poppins', sans-serif;
+    font-weight: 800;
+    font-size: 24px;
+    color: var(--white);
+    letter-spacing: -0.5px;
+    text-decoration: none;
+  }
+  .nav-right { display: flex; align-items: center; gap: 24px; }
+  .nav-link { font-size: 14px; font-weight: 500; color: rgba(255,255,255,0.7); text-decoration: none; }
+  .nav-cta {
+    background: linear-gradient(135deg, var(--purple-start), var(--purple-end));
+    color: var(--white);
+    font-weight: 600;
+    font-size: 14px;
+    padding: 10px 24px;
+    border-radius: 100px;
+    text-decoration: none;
+  }
+
+  /* Spacer to simulate form section above */
+  .spacer {
+    background: var(--off-white);
+    padding: 48px 32px;
+    text-align: center;
+  }
+  .spacer-label {
+    font-family: 'Poppins', sans-serif;
+    font-weight: 600;
+    font-size: 14px;
+    color: var(--grey);
+    letter-spacing: 0.5px;
+  }
+
+  /* ===== RESULTS ===== */
+  .results-section {
+    padding: 0 32px 64px;
+    background: var(--white);
+  }
+  .results-container {
+    max-width: 920px;
+    margin: 0 auto;
+  }
+
+  .result-hero {
+    background: linear-gradient(160deg, var(--purple-start) 0%, var(--purple-end) 100%);
+    border-radius: var(--radius);
+    padding: 52px 44px;
+    text-align: center;
+    margin-top: -48px;
+    position: relative;
+    z-index: 10;
+    box-shadow: 0 16px 40px rgba(65,33,143,0.25);
+    overflow: hidden;
+  }
+  .result-hero::before {
+    content: '';
+    position: absolute;
+    top: -80px;
+    right: -60px;
+    width: 280px;
+    height: 280px;
+    background: radial-gradient(circle, rgba(61,217,201,0.12) 0%, transparent 70%);
+    border-radius: 50%;
+  }
+  .result-hero-label {
+    font-size: 12px;
+    font-weight: 700;
+    color: var(--teal);
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    margin-bottom: 10px;
+    position: relative;
+  }
+  .result-hero h2 {
+    font-family: 'Poppins', sans-serif;
+    font-weight: 800;
+    font-size: 28px;
+    color: var(--white);
+    margin-bottom: 36px;
+    position: relative;
+  }
+
+  .result-stats {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 20px;
+    position: relative;
+  }
+  .stat-block {
+    background: rgba(255,255,255,0.08);
+    border: 1px solid rgba(255,255,255,0.10);
+    border-radius: var(--radius-sm);
+    padding: 28px 18px;
+  }
+  .stat-label {
+    font-size: 11px;
+    font-weight: 600;
+    color: rgba(255,255,255,0.5);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 10px;
+  }
+  .stat-value {
+    font-family: 'Poppins', sans-serif;
+    font-weight: 800;
+    font-size: 36px;
+    color: var(--white);
+    line-height: 1;
+  }
+  .stat-value.teal { color: var(--teal); }
+  .stat-value.gold { color: #F4B804; }
+  .stat-unit {
+    font-size: 13px;
+    color: rgba(255,255,255,0.4);
+    margin-top: 8px;
+  }
+
+  /* Breakdown */
+  .breakdown { margin-top: 48px; }
+  .breakdown h3 {
+    font-family: 'Poppins', sans-serif;
+    font-weight: 700;
+    font-size: 22px;
+    color: var(--navy);
+    margin-bottom: 8px;
+  }
+  .breakdown-subtitle {
+    font-size: 14px;
+    color: var(--grey);
+    margin-bottom: 24px;
+  }
+  .breakdown-table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+    background: var(--white);
+    border-radius: var(--radius-sm);
+    box-shadow: var(--shadow-md);
+    overflow: hidden;
+  }
+  .breakdown-table thead th {
+    background: var(--off-white);
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--grey);
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+    padding: 14px 20px;
+    text-align: left;
+  }
+  .breakdown-table thead th:nth-child(2),
+  .breakdown-table thead th:nth-child(3),
+  .breakdown-table thead th:nth-child(4) { text-align: center; }
+  .breakdown-table tbody td {
+    padding: 16px 20px;
+    font-size: 14px;
+    border-bottom: 1px solid var(--off-white);
+    color: var(--dark);
+  }
+  .breakdown-table tbody td:nth-child(2),
+  .breakdown-table tbody td:nth-child(3),
+  .breakdown-table tbody td:nth-child(4) { text-align: center; font-weight: 500; }
+  .breakdown-table tbody td:nth-child(3) { color: var(--purple-start); font-weight: 600; }
+  .breakdown-table tbody tr:last-child td { border-bottom: none; }
+  .breakdown-table tfoot td {
+    padding: 16px 20px;
+    font-weight: 700;
+    font-size: 14px;
+    background: var(--navy);
+    color: var(--white);
+  }
+  .breakdown-table tfoot td:nth-child(2),
+  .breakdown-table tfoot td:nth-child(3),
+  .breakdown-table tfoot td:nth-child(4) { text-align: center; }
+  .breakdown-table tfoot td:nth-child(3) { color: var(--teal); }
+
+  /* Methodology */
+  .methodology {
+    margin-top: 24px;
+    padding: 20px 24px;
+    background: var(--white);
+    border-radius: var(--radius-sm);
+    border: 1px solid var(--light-grey);
+  }
+  .methodology summary {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--navy);
+    cursor: pointer;
+    list-style: none;
+  }
+  .methodology summary::-webkit-details-marker { display: none; }
+  .methodology summary::before { content: '+ '; color: var(--purple-start); font-weight: 700; }
+  .methodology[open] summary::before { content: '− '; }
+  .methodology p { margin-top: 12px; font-size: 13px; color: var(--grey); line-height: 1.7; }
+
+  /* Benchmark */
+  .benchmark-section {
+    margin-top: 48px;
+    background: var(--off-white);
+    border-radius: var(--radius);
+    padding: 36px;
+  }
+  .benchmark-section h3 {
+    font-family: 'Poppins', sans-serif;
+    font-weight: 700;
+    font-size: 18px;
+    color: var(--navy);
+    margin-bottom: 6px;
+  }
+  .benchmark-subtitle {
+    font-size: 14px;
+    color: var(--grey);
+    margin-bottom: 28px;
+  }
+  .benchmark-bar-group { margin-bottom: 22px; }
+  .benchmark-bar-label { font-size: 13px; font-weight: 500; color: var(--navy); margin-bottom: 8px; }
+  .benchmark-bar-track {
+    height: 36px;
+    background: var(--light-grey);
+    border-radius: var(--radius-xs);
+    overflow: visible;
+    position: relative;
+  }
+  .benchmark-bar-yours {
+    height: 100%;
+    border-radius: var(--radius-xs);
+    background: linear-gradient(135deg, var(--purple-start), var(--purple-end));
+    display: flex;
+    align-items: center;
+    padding: 0 14px;
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--white);
+    position: relative;
+    z-index: 2;
+    min-width: 40px;
+  }
+  .benchmark-marker {
+    position: absolute;
+    top: -6px;
+    bottom: -6px;
+    width: 3px;
+    background: var(--teal);
+    border-radius: 2px;
+    z-index: 3;
+  }
+  .benchmark-marker-label {
+    position: absolute;
+    top: -22px;
+    font-size: 10px;
+    font-weight: 600;
+    color: var(--teal);
+    white-space: nowrap;
+    transform: translateX(-50%);
+    left: 50%;
+  }
+  .benchmark-legend {
+    display: flex;
+    gap: 24px;
+    margin-top: 24px;
+    font-size: 12px;
+    color: var(--grey);
+  }
+  .legend-item { display: flex; align-items: center; gap: 8px; }
+  .legend-swatch { width: 24px; height: 12px; border-radius: 3px; }
+  .legend-swatch.purple-sw { background: linear-gradient(135deg, var(--purple-start), var(--purple-end)); }
+  .legend-line { width: 24px; height: 3px; background: var(--teal); border-radius: 2px; }
+
+  /* CTA */
+  .cta-section {
+    margin-top: 48px;
+    background: linear-gradient(160deg, var(--purple-start) 0%, var(--purple-end) 100%);
+    border-radius: var(--radius);
+    padding: 52px 44px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+  .cta-section::before {
+    content: '';
+    position: absolute;
+    bottom: -60px;
+    right: -40px;
+    width: 200px;
+    height: 200px;
+    background: radial-gradient(circle, rgba(61,217,201,0.15) 0%, transparent 70%);
+    border-radius: 50%;
+  }
+  .cta-section h3 {
+    font-family: 'Poppins', sans-serif;
+    font-weight: 700;
+    font-size: 24px;
+    color: var(--white);
+    margin-bottom: 10px;
+    position: relative;
+  }
+  .cta-section p {
+    font-size: 15px;
+    color: rgba(255,255,255,0.7);
+    max-width: 480px;
+    margin: 0 auto 28px;
+    position: relative;
+  }
+  .btn-cta {
+    display: inline-block;
+    font-family: 'Fira Sans', sans-serif;
+    font-weight: 600;
+    font-size: 16px;
+    background: var(--white);
+    color: var(--navy);
+    border: none;
+    padding: 16px 40px;
+    border-radius: 100px;
+    cursor: pointer;
+    text-decoration: none;
+    position: relative;
+  }
+
+  /* Benefits */
+  .benefits-section { margin-top: 48px; }
+  .benefits-section h3 {
+    font-family: 'Poppins', sans-serif;
+    font-weight: 700;
+    font-size: 22px;
+    color: var(--navy);
+    margin-bottom: 24px;
+    text-align: center;
+  }
+  .benefits-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 20px;
+  }
+  .benefit-card {
+    background: var(--white);
+    border-radius: var(--radius-sm);
+    box-shadow: var(--shadow-md);
+    padding: 32px 24px;
+    text-align: center;
+  }
+  .benefit-icon {
+    width: 52px;
+    height: 52px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 16px;
+    font-size: 24px;
+  }
+  .benefit-icon.purple-bg { background: rgba(122,52,255,0.08); }
+  .benefit-icon.teal-bg { background: var(--teal-soft); }
+  .benefit-card h4 {
+    font-family: 'Poppins', sans-serif;
+    font-weight: 600;
+    font-size: 16px;
+    color: var(--navy);
+    margin-bottom: 8px;
+  }
+  .benefit-card p {
+    font-size: 13px;
+    color: var(--grey);
+    line-height: 1.55;
+  }
+
+  /* Testimonial */
+  .testimonial-section { margin-top: 48px; text-align: center; }
+  .testimonial-card {
+    background: var(--off-white);
+    border-radius: var(--radius);
+    padding: 44px;
+    max-width: 640px;
+    margin: 0 auto;
+  }
+  .testimonial-quote {
+    font-family: 'Poppins', sans-serif;
+    font-weight: 500;
+    font-size: 18px;
+    color: var(--navy);
+    line-height: 1.6;
+    font-style: italic;
+    margin-bottom: 20px;
+  }
+  .testimonial-author { font-size: 14px; font-weight: 600; color: var(--navy); }
+  .testimonial-role { font-size: 13px; color: var(--grey); }
+  .testimonial-placeholder {
+    font-size: 11px;
+    color: var(--grey);
+    background: var(--white);
+    display: inline-block;
+    padding: 4px 12px;
+    border-radius: 100px;
+    margin-top: 16px;
+  }
+
+  /* Lead */
+  .lead-section {
+    margin-top: 48px;
+    background: var(--navy);
+    border-radius: var(--radius);
+    padding: 44px;
+    text-align: center;
+  }
+  .lead-section h3 {
+    font-family: 'Poppins', sans-serif;
+    font-weight: 700;
+    font-size: 20px;
+    color: var(--white);
+    margin-bottom: 8px;
+  }
+  .lead-section p {
+    font-size: 14px;
+    color: rgba(255,255,255,0.6);
+    margin-bottom: 24px;
+  }
+
+  .footer {
+    text-align: center;
+    padding: 32px;
+    font-size: 12px;
+    color: var(--grey);
+    border-top: 1px solid var(--light-grey);
+    margin-top: 64px;
+  }
+
+  @media (max-width: 768px) {
+    .result-stats { grid-template-columns: 1fr; }
+    .stat-value { font-size: 28px; }
+    .benefits-grid { grid-template-columns: 1fr; }
+    .breakdown-table thead th,
+    .breakdown-table tbody td,
+    .breakdown-table tfoot td { padding: 12px 14px; }
+    .result-hero { padding: 36px 24px; }
+    .nav-link { display: none; }
+  }
+</style>
+</head>
+<body>
+
+<div class="dev-badge">Sample data preview</div>
+
+<nav class="nav">
+  <div class="nav-inner">
+    <a class="nav-logo" href="#">Opply</a>
+    <div class="nav-right">
+      <a class="nav-link" href="#">How it works</a>
+      <a class="nav-link" href="#">For suppliers</a>
+      <a class="nav-cta" href="#">Book a demo</a>
+    </div>
+  </div>
+</nav>
+
+<div class="spacer">
+  <div class="spacer-label">&#8593; Calculator form sits above this &#8593;</div>
+</div>
+
+<section class="results-section">
+  <div class="results-container">
+
+    <div class="result-hero">
+      <div class="result-hero-label">Your results</div>
+      <h2>Opply could save your team</h2>
+      <div class="result-stats">
+        <div class="stat-block">
+          <div class="stat-label">Hours saved per week</div>
+          <div class="stat-value teal">17.8 hrs</div>
+          <div class="stat-unit">out of 21 hrs currently spent</div>
+        </div>
+        <div class="stat-block">
+          <div class="stat-label">Hours saved per year</div>
+          <div class="stat-value">926</div>
+          <div class="stat-unit">full working weeks: 23.1</div>
+        </div>
+        <div class="stat-block">
+          <div class="stat-label">Annual value of time saved</div>
+          <div class="stat-value gold">$28,942</div>
+          <div class="stat-unit">at $65,000/yr ($31/hr)</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="breakdown">
+      <h3>Where the time goes back</h3>
+      <p class="breakdown-subtitle">Task by task breakdown of your current hours and what Opply automates.</p>
+      <table class="breakdown-table">
+        <thead>
+          <tr>
+            <th>Task</th>
+            <th>Your hours</th>
+            <th>Opply automates</th>
+            <th>Still manual</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Forecasting and demand planning</td>
+            <td>5 hrs</td>
+            <td>4.1 hrs (82%)</td>
+            <td>0.9 hrs</td>
+          </tr>
+          <tr>
+            <td>Supplier sourcing and negotiation</td>
+            <td>4 hrs</td>
+            <td>3.1 hrs (78%)</td>
+            <td>0.9 hrs</td>
+          </tr>
+          <tr>
+            <td>Order placement and tracking</td>
+            <td>5 hrs</td>
+            <td>4.5 hrs (90%)</td>
+            <td>0.5 hrs</td>
+          </tr>
+          <tr>
+            <td>Delivery coordination</td>
+            <td>3 hrs</td>
+            <td>2.6 hrs (85%)</td>
+            <td>0.4 hrs</td>
+          </tr>
+          <tr>
+            <td>Invoicing and payment admin</td>
+            <td>2 hrs</td>
+            <td>1.8 hrs (92%)</td>
+            <td>0.2 hrs</td>
+          </tr>
+          <tr>
+            <td>Financing and credit applications</td>
+            <td>2 hrs</td>
+            <td>1.7 hrs (85%)</td>
+            <td>0.3 hrs</td>
+          </tr>
+        </tbody>
+        <tfoot>
+          <tr>
+            <td>Total</td>
+            <td>21 hrs</td>
+            <td>17.8 hrs</td>
+            <td>3.2 hrs</td>
+          </tr>
+        </tfoot>
+      </table>
+
+      <details class="methodology">
+        <summary>How we calculated this</summary>
+        <p>For each ops task, we multiply your weekly hours by Opply's automation rate for that task (based on your revenue tier: $1M to $2M). Total weekly hours saved is annualised (x 52 weeks) and multiplied by your hourly rate ($65,000 salary / 2,080 hours = $31/hr) to produce the annual value. Automation rates are placeholder estimates pending Opply's confirmed data. Benchmark averages shown in the comparison section are F&B industry reference points and do not affect this calculation.</p>
+      </details>
+    </div>
+
+    <div class="benchmark-section">
+      <h3>How you compare to other F&B brands</h3>
+      <p class="benchmark-subtitle">How your weekly ops hours stack up against the average F&B brand in your revenue tier. The teal line shows the industry average.</p>
+
+      <div class="benchmark-bar-group">
+        <div class="benchmark-bar-label">Forecasting and demand planning</div>
+        <div class="benchmark-bar-track">
+          <div class="benchmark-bar-yours" style="width:50%;">5h</div>
+          <div class="benchmark-marker" style="left:50%;"><div class="benchmark-marker-label">5h avg</div></div>
+        </div>
+      </div>
+      <div class="benchmark-bar-group">
+        <div class="benchmark-bar-label">Supplier sourcing and negotiation</div>
+        <div class="benchmark-bar-track">
+          <div class="benchmark-bar-yours" style="width:40%;">4h</div>
+          <div class="benchmark-marker" style="left:50%;"><div class="benchmark-marker-label">5h avg</div></div>
+        </div>
+      </div>
+      <div class="benchmark-bar-group">
+        <div class="benchmark-bar-label">Order placement and tracking</div>
+        <div class="benchmark-bar-track">
+          <div class="benchmark-bar-yours" style="width:50%;">5h</div>
+          <div class="benchmark-marker" style="left:60%;"><div class="benchmark-marker-label">6h avg</div></div>
+        </div>
+      </div>
+      <div class="benchmark-bar-group">
+        <div class="benchmark-bar-label">Delivery coordination</div>
+        <div class="benchmark-bar-track">
+          <div class="benchmark-bar-yours" style="width:30%;">3h</div>
+          <div class="benchmark-marker" style="left:40%;"><div class="benchmark-marker-label">4h avg</div></div>
+        </div>
+      </div>
+      <div class="benchmark-bar-group">
+        <div class="benchmark-bar-label">Invoicing and payment admin</div>
+        <div class="benchmark-bar-track">
+          <div class="benchmark-bar-yours" style="width:20%;">2h</div>
+          <div class="benchmark-marker" style="left:30%;"><div class="benchmark-marker-label">3h avg</div></div>
+        </div>
+      </div>
+      <div class="benchmark-bar-group">
+        <div class="benchmark-bar-label">Financing and credit applications</div>
+        <div class="benchmark-bar-track">
+          <div class="benchmark-bar-yours" style="width:20%;">2h</div>
+          <div class="benchmark-marker" style="left:20%;"><div class="benchmark-marker-label">2h avg</div></div>
+        </div>
+      </div>
+
+      <div class="benchmark-legend">
+        <div class="legend-item"><div class="legend-swatch purple-sw"></div> Your hours</div>
+        <div class="legend-item"><div class="legend-line"></div> F&B industry average for your tier</div>
+      </div>
+    </div>
+
+    <div class="cta-section">
+      <h3>These are estimates. Let's get your real numbers.</h3>
+      <p>A 15 minute call with our F&B ops team will validate these figures against your specific supply chain. No pitch, just numbers.</p>
+      <a class="btn-cta" href="#">Book a call</a>
+    </div>
+
+    <div class="benefits-section">
+      <h3>What F&B brands get with Opply</h3>
+      <div class="benefits-grid">
+        <div class="benefit-card">
+          <div class="benefit-icon purple-bg">&#9201;</div>
+          <h4>98% on time delivery</h4>
+          <p>Versus the 60% industry average. Fewer emergencies, fewer stockouts, fewer missed listings.</p>
+        </div>
+        <div class="benefit-card">
+          <div class="benefit-icon teal-bg">&#128176;</div>
+          <h4>90 day payment terms</h4>
+          <p>Free up working capital. Pay for ingredients after you've sold the product, not before.</p>
+        </div>
+        <div class="benefit-card">
+          <div class="benefit-icon purple-bg">&#127760;</div>
+          <h4>Top tier supplier access</h4>
+          <p>Opply aggregates demand to unlock suppliers like Barry Callebaut that small brands can't reach alone.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="testimonial-section">
+      <div class="testimonial-card">
+        <p class="testimonial-quote">"[Placeholder: real client testimonial to go here. Ideally from a founder at a similar stage brand who can speak to the time savings and operational relief Opply delivered.]"</p>
+        <div class="testimonial-author">[Client Name]</div>
+        <div class="testimonial-role">Founder, [Brand Name]</div>
+        <div class="testimonial-placeholder">Opply to provide client quote</div>
+      </div>
+    </div>
+
+    <div class="lead-section">
+      <h3>Help us tailor your report further</h3>
+      <p>These are optional but help our team personalise your consultation.</p>
+      <div style="max-width:480px;margin:0 auto;">
+        <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;">
+          <div>
+            <label style="font-size:11px;color:rgba(255,255,255,0.5);display:block;margin-bottom:4px;">Number of SKUs</label>
+            <select style="width:100%;font-family:'Fira Sans',sans-serif;font-size:13px;padding:8px 12px;border:1.5px solid rgba(255,255,255,0.15);border-radius:var(--radius-xs);background:rgba(255,255,255,0.08);color:var(--white);appearance:none;">
+              <option value="" selected>Select</option>
+              <option>1 - 5</option><option>6 - 10</option><option>11 - 25</option><option>26 - 50</option><option>50+</option>
+            </select>
+          </div>
+          <div>
+            <label style="font-size:11px;color:rgba(255,255,255,0.5);display:block;margin-bottom:4px;">Number of suppliers</label>
+            <select style="width:100%;font-family:'Fira Sans',sans-serif;font-size:13px;padding:8px 12px;border:1.5px solid rgba(255,255,255,0.15);border-radius:var(--radius-xs);background:rgba(255,255,255,0.08);color:var(--white);appearance:none;">
+              <option value="" selected>Select</option>
+              <option>1 - 5</option><option>6 - 10</option><option>11 - 20</option><option>21 - 40</option><option>40+</option>
+            </select>
+          </div>
+          <div>
+            <label style="font-size:11px;color:rgba(255,255,255,0.5);display:block;margin-bottom:4px;">Number of ingredients</label>
+            <select style="width:100%;font-family:'Fira Sans',sans-serif;font-size:13px;padding:8px 12px;border:1.5px solid rgba(255,255,255,0.15);border-radius:var(--radius-xs);background:rgba(255,255,255,0.08);color:var(--white);appearance:none;">
+              <option value="" selected>Select</option>
+              <option>1 - 15</option><option>15 - 30</option><option>30 - 50</option><option>51 - 100</option><option>100+</option>
+            </select>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<footer class="footer">
+  Opply Ltd &middot; Sample data preview &middot; Automation rates pending
+</footer>
+
+</body>
+</html>
